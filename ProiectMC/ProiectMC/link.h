@@ -1,8 +1,6 @@
-export module link;
-import <iostream>;
-
-import peg;
-using twixt::Peg;
+#pragma once
+#include <iostream>
+#include "peg.h";
 
 namespace twixt {
 	export class Link {
@@ -17,11 +15,11 @@ namespace twixt {
 		Peg setP2(const Peg& p2);
 		std::string setColor(const std::string& color);
 		//Player owner; (implement Player class)
-		
+
 	private:
 		Peg m_p1;
 		Peg m_p2;
 		std::string color;
-		
+
 	};
 }

@@ -1,6 +1,7 @@
-module link;
+#include "link.h";
 using twixt::Link;
 using twixt::Peg;
+
 Link::Link() = default;
 
 Link::Link(const Peg& p1, const Peg& p2) : m_p1{ p1 }, m_p2{ p2 } {}

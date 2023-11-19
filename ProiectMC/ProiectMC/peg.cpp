@@ -1,5 +1,4 @@
-module peg;
-
+#include "peg.h";
 using twixt::Peg;
 
 Peg::Peg() = default;
