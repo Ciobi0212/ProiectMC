@@ -1,13 +1,10 @@
+#pragma once
 export module player;
 
-import <string>;
-import <vector>;
-
-import peg;
-using twixt::Peg;
-
-import link;
-using twixt::Link;
+#include <string>;
+#include <vector>;
+#include "peg.h";
+#include "link.h";
 
 namespace twixt {
 	export class Player {

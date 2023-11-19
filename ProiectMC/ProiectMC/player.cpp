@@ -1,14 +1,8 @@
-module player;
+#include "player.h"
 using twixt::Player;
-
-import <string>;
-import <vector>;
-
-import peg;
 using twixt::Peg;
-
-import link;
 using twixt::Link;
+
 
 Player::Player() = default;
 
