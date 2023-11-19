@@ -3,8 +3,6 @@ using twixt::Cell;
 using twixt::Link;
 using twixt::Peg;
 
-import <optional>;
-import <string>;
 
 Cell::Cell() = default;
 

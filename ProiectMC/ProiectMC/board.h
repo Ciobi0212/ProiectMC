@@ -1,5 +1,4 @@
 #pragma once
-export module board;
 
 #include <iostream>;
 #include <vector>;
@@ -14,7 +13,7 @@ namespace twixt {
 		~Board();
 
 	private:
-		const uint16_t BOARD_SIZE{ 24 };
+		static const uint16_t BOARD_SIZE{ 24 };
 		std::vector<std::vector<Cell>> board;
 
 

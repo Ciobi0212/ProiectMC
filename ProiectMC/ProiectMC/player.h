@@ -3,7 +3,7 @@ export module player;
 
 #include <string>;
 #include <vector>;
-#include "peg.h";
+#include "Peg.h";
 #include "link.h";
 
 namespace twixt {
@@ -16,14 +16,14 @@ namespace twixt {
 		std::string getColor() const;
 		std::string setName(const std::string& name);
 		std::string setColor(const std::string& color);
-		std::vector<Peg> getPegs() const;
-		std::vector<Link> getLinks() const;
-		std::vector<Peg> setPegs(std::vector<Peg> pegs);
-		std::vector<Link> setLinks(std::vector<Link> links);
+		std::vector<Peg*> getPegs() const;
+		std::vector<Link*> getLinks() const;
+		std::vector<Peg*> setPegs(const std::vector<Peg*>& pegs);
+		std::vector<Link*> setLinks(const std::vector<Link*>& links);
 	private:
 		std::string name;
 		std::string color;
-		std::vector<Peg> pegs;
-		std::vector<Link> links;
+		std::vector<Peg*> pegs;
+		std::vector<Link*> links;
 	};
 }
