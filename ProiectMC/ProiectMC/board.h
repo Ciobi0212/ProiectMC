@@ -11,6 +11,13 @@ namespace twixt {
 	public:
 		Board();
 		~Board();
+		
+		using Position = std::pair<uint8_t, uint8_t>;
+
+		
+		Cell& operator[](const Position& pos);
+		const Cell& operator[](const Position& pos) const;
+		
 
 	private:
 		static const uint16_t BOARD_SIZE{ 24 };
