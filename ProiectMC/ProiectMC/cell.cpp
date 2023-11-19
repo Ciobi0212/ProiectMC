@@ -1,11 +1,7 @@
-module cell;
+#include "cell.h";
 using twixt::Cell;
-
-import peg;
-using twixt::Peg;
-
-import link;
 using twixt::Link;
+using twixt::Peg;
 
 import <optional>;
 import <string>;
