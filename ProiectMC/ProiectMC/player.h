@@ -5,6 +5,7 @@ export module player;
 #include <vector>;
 #include "Peg.h";
 #include "link.h";
+#include "board.h";
 
 namespace twixt {
 	export class Player {
@@ -20,10 +21,14 @@ namespace twixt {
 		std::vector<Link*> getLinks() const;
 		std::vector<Peg*> setPegs(const std::vector<Peg*>& pegs);
 		std::vector<Link*> setLinks(const std::vector<Link*>& links);
+		
+		using Position = std::pair<uint8_t, uint8_t>;
+		
+		void placePegOnBoard(Board& board, const Position& pos) const;
 	private:
-		std::string name;
-		std::string color;
-		std::vector<Peg*> pegs;
-		std::vector<Link*> links;
+		std::string m_name;
+		std::string m_color;
+		std::vector<Peg*> m_pegs;
+		std::vector<Link*> m_links;
 	};
 }
