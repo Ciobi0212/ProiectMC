@@ -15,6 +15,34 @@ Board::Board() {
 
 Board::~Board() = default;
 
+void twixt::Board::drawBoard()
+{
+	for (uint8_t i = 0; i < BOARD_SIZE; i++) {
+		for (uint8_t j = 0; j < BOARD_SIZE; j++) {
+			Cell& curentCell = board[i][j];
+			if (curentCell.hasPeg()) {
+				std::cout << curentCell.getPeg().getColor()<<" ";
+			}
+			else {
+				std::cout << "E ";
+			}
+		}
+		std::cout << std::endl;
+	}
+}
+
+uint16_t twixt::Board::getSize() const
+{
+	return BOARD_SIZE;
+}
+
+bool twixt::Board::isInBounds(const Position& pos) const
+{
+	auto& [line, column] = pos;
+
+	return line >= 0 && line < BOARD_SIZE&& column >= 0 && column < BOARD_SIZE;
+}
+
 Cell& twixt::Board::operator[](const Position& pos)
 {
 	auto& [line, column] = pos;
