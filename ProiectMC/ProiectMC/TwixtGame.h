@@ -8,7 +8,7 @@ class TwixtGame
 public:
 	TwixtGame(twixt::Board& board, twixt::Player& firstPlayer, twixt::Player& secondPlayer, twixt::Player& currentPlayer);
 	~TwixtGame();
-	void start();
+	void run();
 	void end();
 	void reset();
 
