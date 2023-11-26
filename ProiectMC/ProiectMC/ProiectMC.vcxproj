@@ -140,16 +140,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp" />
-    <ClCompile Include="board.cppm" />
     <ClCompile Include="cell.cpp" />
     <ClCompile Include="link.cpp" />
-    <ClCompile Include="link.cppm" />
     <ClCompile Include="peg.cpp" />
-    <ClCompile Include="peg.cppm" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="player.cppm" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="cell.cppm" />
+    <ClCompile Include="TwixtGame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="board.h" />
+    <ClInclude Include="cell.h" />
+    <ClInclude Include="link.h" />
+    <ClInclude Include="peg.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="TwixtGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

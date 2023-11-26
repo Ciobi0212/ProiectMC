@@ -18,35 +18,43 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="peg.cppm">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="peg.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="link.cppm">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="link.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="player.cppm">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="board.cppm">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cell.cppm">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TwixtGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="peg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="link.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TwixtGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

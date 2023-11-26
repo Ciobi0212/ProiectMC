@@ -2,9 +2,9 @@
 using twixt::Link;
 using twixt::Peg;
 
-Link::Link() = default;
-
-Link::Link(const Peg& p1, const Peg& p2) : m_p1{ p1 }, m_p2{ p2 } {}
+Link::Link(Peg& p1, Peg& p2) : m_p1{ p1 }, m_p2{ p2 } {
+	m_color = m_p1.getColor();
+}
 
 Link::~Link() = default;
 
@@ -17,21 +17,18 @@ Peg Link::getP2() const {
 }
 
 std::string Link::getColor() const {
-	return color;
+	return m_color;
 }
 
-Peg Link::setP1(const Peg& p1) {
+void Link::setP1(Peg& p1) {
 	m_p1 = p1;
-	return m_p1;
 }
 
-Peg Link::setP2(const Peg& p2) {
+void Link::setP2(Peg& p2) {
 	m_p2 = p2;
-	return m_p2;
 }
 
-std::string Link::setColor(const std::string& color) {
-	this->color = color;
-	return this->color;
+void Link::setColor(const std::string& color) {
+	m_color = color;
 }
 
