@@ -12,23 +12,29 @@ std::optional<std::string> Cell::getColor() const {
 	return m_color;
 }
 
-std::optional<Peg*> Cell::getPeg() const {
-	return m_peg;
+Peg& Cell::getPeg() const {
+	if (m_peg.has_value())
+		return *m_peg.value();
+	else
+		throw std::exception("Cell has no peg");
 }
 
-std::optional<Link*> Cell::getLink() const {
-	return m_link;
+Link& Cell::getLink() const {
+	if (m_link.has_value())
+		return *m_link.value();
+	else
+		throw std::exception("Cell has no link");
 }
 
 void Cell::setColor(const std::string& color) {
 	m_color.emplace(color);
 }
 
-void Cell::setPeg(const Peg& peg) {
+void Cell::setPeg(Peg*& peg) {
 	m_peg.emplace(peg);
 }
 
-void Cell::setLink(const Link& link) {
+void Cell::setLink(Link*& link) {
 	m_link.emplace(link);
 }
 

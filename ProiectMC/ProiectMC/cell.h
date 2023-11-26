@@ -1,5 +1,5 @@
 #pragma once
-export module cell;
+
 
 #include "peg.h";
 
@@ -9,7 +9,7 @@ export module cell;
 #include <string>;
 
 namespace twixt {
-	export class Cell {
+	 class Cell {
 	private:
 		std::optional<std::string> m_color;
 		std::optional<Peg*> m_peg;
@@ -20,11 +20,11 @@ namespace twixt {
 		//		TwixtCell(const std::string& color, const Peg& peg, const Link& link);
 		~Cell();
 		std::optional<std::string> getColor() const;
-		std::optional<Peg*> getPeg() const;
-		std::optional<Link*> getLink() const;
+		Peg& getPeg() const;
+		Link& getLink() const;
 		void setColor(const std::string& color);
-		void setPeg(const Peg& peg);
-		void setLink(const Link& link);
+		void setPeg(Peg*& peg);
+		void setLink(Link*& link);
 		bool hasColor() const;
 		bool hasPeg() const;
 
