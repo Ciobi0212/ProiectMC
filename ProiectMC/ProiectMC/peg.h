@@ -4,22 +4,24 @@
 
 
 namespace twixt {
+	enum class Color { RED, BLUE, NONE };
+	
 	class Peg {
 	public:
 		Peg();
-		Peg(uint16_t x, uint16_t y, const std::string& color);
+		Peg(uint16_t x, uint16_t y, Color color);
 		~Peg();
 		uint16_t getX() const;
 		uint16_t getY() const;
-		std::string getColor() const;
-		uint16_t setX(uint16_t x);
-		uint16_t setY(uint16_t y);
-		std::string setColor(const std::string& color);
+		Color getColor() const;
+		void setX(uint16_t x);
+		void setY(uint16_t y);
+		void setColor(Color color);
 
 
 	private:
 		uint16_t m_x;
 		uint16_t m_y;
-		std::string m_color;
+		Color m_color;
 	};
 }
