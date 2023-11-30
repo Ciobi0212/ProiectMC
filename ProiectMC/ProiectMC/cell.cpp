@@ -1,49 +1,55 @@
 #include "cell.h";
-using twixt::Cell;
-using twixt::Link;
-using twixt::Peg;
+using namespace twixt;
 
 
 Cell::Cell() = default;
 
 Cell::~Cell() = default;
 
-std::optional<std::string> Cell::getColor() const {
+Color Cell::getColor() const {
 	return m_color;
 }
 
-Peg& Cell::getPeg() const {
-	if (m_peg.has_value())
-		return *m_peg.value();
+const Peg& Cell::getPeg() const {
+	if (m_peg)
+		return *m_peg;
 	else
 		throw std::exception("Cell has no peg");
 }
 
-Link& Cell::getLink() const {
-	if (m_link.has_value())
-		return *m_link.value();
+const Link& Cell::getLink() const {
+	if (m_link)
+		return *m_link;
 	else
 		throw std::exception("Cell has no link");
 }
 
-void Cell::setColor(const std::string& color) {
-	m_color.emplace(color);
+void Cell::setColor(Color color) {
+	m_color = color;
 }
 
 void Cell::setPeg(Peg*& peg) {
-	m_peg.emplace(peg);
+	m_peg = peg;
 }
 
 void Cell::setLink(Link*& link) {
-	m_link.emplace(link);
+	m_link = link;
 }
 
 bool Cell::hasColor() const {
-	return m_color.has_value();
+	if (m_color == Color::NONE) {
+		return false;
+	}
+	
+	return true;
 }
 
 bool Cell::hasPeg() const {
-	return m_peg.has_value();
+	if (m_peg == nullptr) {
+		return false;
+	}
+
+	return true;
 }
 
 

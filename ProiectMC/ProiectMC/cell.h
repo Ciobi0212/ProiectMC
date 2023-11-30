@@ -11,18 +11,17 @@
 namespace twixt {
 	 class Cell {
 	private:
-		std::optional<std::string> m_color;
-		std::optional<Peg*> m_peg;
-		std::optional<Link*> m_link;
+		Peg* m_peg;
+		Link* m_link;
+		Color m_color;
 
 	public:
 		Cell();
-		//		TwixtCell(const std::string& color, const Peg& peg, const Link& link);
 		~Cell();
-		std::optional<std::string> getColor() const;
-		Peg& getPeg() const;
-		Link& getLink() const;
-		void setColor(const std::string& color);
+		Color getColor() const;
+		const Peg& getPeg() const;
+		const Link& getLink() const;
+		void setColor(Color color);
 		void setPeg(Peg*& peg);
 		void setLink(Link*& link);
 		bool hasColor() const;
