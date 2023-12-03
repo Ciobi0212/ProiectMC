@@ -1,12 +1,10 @@
 #include "player.h"
-using twixt::Player;
-using twixt::Peg;
-using twixt::Link;
+using namespace twixt;
 
 
 Player::Player() = default;
 
-Player::Player(std::string name, std::string color) : m_name{ name }, m_color{ color } {}
+Player::Player(const std::string& name, Color color) : m_name{ name }, m_color{ color } {}
 
 Player::~Player() = default;
 
@@ -14,18 +12,16 @@ std::string Player::getName() const {
 	return m_name;
 }
 
-std::string Player::getColor() const {
+Color Player::getColor() const {
 	return m_color;
 }
 
-std::string Player::setName(const std::string& name) {
+void Player::setName(const std::string& name) {
 	this->m_name = name;
-	return this->m_name;
 }
 
-std::string Player::setColor(const std::string& color) {
+void Player::setColor(Color color) {
 	this->m_color = color;
-	return this->m_color;
 }
 
 std::vector<std::reference_wrapper<Peg>> Player::getPegs() const {
@@ -51,6 +47,21 @@ void twixt::Player::addLink(Link& link)
 	m_links.push_back(link);
 }
 
+bool twixt::Player::linkNeedsToBePlaced(Board& board, const Position& pos1, const Position& pos2) const
+{
+	return (board.isInBounds(pos1) and board.isInBounds(pos2) 
+		and board[pos1].hasPeg() and board[pos2].hasPeg() 
+		and (board[pos1].getColor() == board[pos2].getColor()));
+}
+
+void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2)
+{
+	Link* linkToAdd = new Link{ board[pos1].getPeg(), board[pos2].getPeg() };
+	board[pos1].setLink(linkToAdd);
+	board[pos2].setLink(linkToAdd);
+	addLink(*linkToAdd);
+}
+
 //std::vector<Link*> Player::setLinks(const std::vector<Link*>& links) {
 //	this->m_links = links;
 //	return this->m_links;
@@ -66,47 +77,34 @@ void twixt::Player::placePegOnBoard(Board& board, const Position& pos)
 	
 	auto& [x, y] = pos;
 	Peg* pegToAdd = new Peg{ x, y, m_color };
-
 	curentCell.setPeg(pegToAdd);
+	curentCell.setColor(m_color);
 	this->addPeg(*pegToAdd);
 	
 	Position upLeft{ x - 2, y - 1 };
 	Position upRight{ x - 2, y + 1 };
 	Position downLeft{ x + 2, y - 1 };
 	Position downRight{ x + 2, y + 1 };
-	uint16_t boardSize = board.getSize();
 	
-	if (board.isInBounds(upLeft)) {
-		if (board[upLeft].hasPeg() and board[upLeft].getPeg().getColor() == m_color) {
-			Link* link = new Link(*pegToAdd, board[upLeft].getPeg());
-			addLink(*link);
-			curentCell.setLink(link);
-		}
+	if (linkNeedsToBePlaced(board, pos, upLeft)) {
+		placeLinkOnBoard(board, pos, upLeft);
 	}
 	
-	if (board.isInBounds(upRight)) {
-		if (board[upRight].hasPeg() and board[upRight].getPeg().getColor() == m_color) {
-			Link* link = new Link(*pegToAdd, board[upRight].getPeg());
-			addLink(*link);
-			curentCell.setLink(link);
-		}
+	if (linkNeedsToBePlaced(board, pos, upRight)) {
+		placeLinkOnBoard(board, pos, upRight);
 	}
-	
-	if (board.isInBounds(downLeft)) {
-		if (board[downLeft].hasPeg() and board[downLeft].getPeg().getColor() == m_color) {
-			Link* link = new Link(*pegToAdd, board[downLeft].getPeg());
-			addLink(*link);
-			curentCell.setLink(link);
-		}
+
+	if (linkNeedsToBePlaced(board, pos, downLeft)) {
+		placeLinkOnBoard(board, pos, downLeft);
 	}
-	
-	if (board.isInBounds(downRight)) {
-		if (board[downRight].hasPeg() and board[downRight].getPeg().getColor() == m_color) {
-			Link* link = new Link(*pegToAdd, board[downRight].getPeg());
-			addLink(*link);
-			curentCell.setLink(link);
-		}
+
+	if (linkNeedsToBePlaced(board, pos, downRight)) {
+		placeLinkOnBoard(board, pos, downRight);
 	}
 	
 }
+
+
+
+
 

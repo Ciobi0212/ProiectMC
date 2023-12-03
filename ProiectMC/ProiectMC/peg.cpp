@@ -3,7 +3,7 @@ using namespace twixt;
 
 Peg::Peg() = default;
 
-Peg::Peg(uint16_t x, uint16_t y, Color color) : m_x{ x }, m_y{ y }, m_color{color} {}
+Peg::Peg(size_t x, size_t y, Color color) : m_x{ x }, m_y{ y }, m_color{color} {}
 
 Peg::~Peg() = default;
 

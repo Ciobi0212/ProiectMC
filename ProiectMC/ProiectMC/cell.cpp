@@ -2,7 +2,11 @@
 using namespace twixt;
 
 
-Cell::Cell() = default;
+Cell::Cell() {
+	m_peg = nullptr;
+	m_link = nullptr;
+	m_color = Color::NONE;
+}
 
 Cell::~Cell() = default;
 
@@ -10,14 +14,14 @@ Color Cell::getColor() const {
 	return m_color;
 }
 
-const Peg& Cell::getPeg() const {
+Peg& Cell::getPeg() const {
 	if (m_peg)
 		return *m_peg;
 	else
 		throw std::exception("Cell has no peg");
 }
 
-const Link& Cell::getLink() const {
+Link& Cell::getLink() const {
 	if (m_link)
 		return *m_link;
 	else

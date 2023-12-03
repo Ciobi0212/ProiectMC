@@ -19,8 +19,8 @@ namespace twixt {
 		Cell();
 		~Cell();
 		Color getColor() const;
-		const Peg& getPeg() const;
-		const Link& getLink() const;
+	    Peg& getPeg() const;
+	    Link& getLink() const;
 		void setColor(Color color);
 		void setPeg(Peg*& peg);
 		void setLink(Link*& link);

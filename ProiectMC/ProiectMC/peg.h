@@ -9,7 +9,7 @@ namespace twixt {
 	class Peg {
 	public:
 		Peg();
-		Peg(uint16_t x, uint16_t y, Color color);
+		Peg(size_t x, size_t y, Color color);
 		~Peg();
 		uint16_t getX() const;
 		uint16_t getY() const;
@@ -20,8 +20,8 @@ namespace twixt {
 
 
 	private:
-		uint16_t m_x;
-		uint16_t m_y;
+		size_t m_x;
+		size_t m_y;
 		Color m_color;
 	};
 }

@@ -1,17 +1,13 @@
 #include "board.h";
 
-using twixt::Board;
-using twixt::Cell;
+using namespace twixt;
 
-Board::Board() {
-	for (int i = 0; i < BOARD_SIZE; i++) {
-		std::vector<Cell> row;
-		for (int j = 0; j < BOARD_SIZE; j++) {
-			row.push_back(Cell());
-		}
-		board.push_back(row);
-	}
-}
+Board::Board()  {
+	m_board.resize(BOARD_SIZE);
+	for (std::size_t i = 0; i < BOARD_SIZE; i++)
+		m_board[i].resize(BOARD_SIZE);
+};
+
 
 Board::~Board() = default;
 
@@ -19,19 +15,25 @@ void twixt::Board::drawBoard()
 {
 	for (uint8_t i = 0; i < BOARD_SIZE; i++) {
 		for (uint8_t j = 0; j < BOARD_SIZE; j++) {
-			Cell& curentCell = board[i][j];
-			if (curentCell.hasPeg()) {
-				std::cout << curentCell.getPeg().getColor()<<" ";
-			}
-			else {
-				std::cout << "E ";
-			}
+			Cell& curentCell = m_board[i][j];
+				Color color = curentCell.getColor();
+				switch (color) {
+				case Color::RED:
+					std::cout << "R";
+					break;
+				case Color::BLUE:
+					std::cout << "B";
+					break;
+				default:
+					std::cout << " ";
+					break;
+				}
 		}
 		std::cout << std::endl;
 	}
 }
 
-uint16_t twixt::Board::getSize() const
+size_t twixt::Board::getSize() const
 {
 	return BOARD_SIZE;
 }
@@ -47,10 +49,10 @@ Cell& twixt::Board::operator[](const Position& pos)
 {
 	auto& [line, column] = pos;
 
-	if (line < 0 || line > BOARD_SIZE || column < 0 || column > BOARD_SIZE)
+	if (!isInBounds(pos))
 		throw std::out_of_range("Position out of bounds");
 
-	return board[line][column];
+	return m_board[line][column];
 	
 }
 
@@ -58,9 +60,9 @@ const Cell& twixt::Board::operator[](const Position& pos) const
 {
 	auto& [line, column] = pos;
 
-	if (line < 0 || line > BOARD_SIZE || column < 0 || column > BOARD_SIZE)
+	if (!isInBounds(pos))
 		throw std::out_of_range("Position out of bounds");
 
-	return board[line][column];
+	return m_board[line][column];
 }
 
