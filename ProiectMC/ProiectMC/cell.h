@@ -26,6 +26,7 @@ namespace twixt {
 		void setLink(Link*& link);
 		bool hasColor() const;
 		bool hasPeg() const;
+		bool hasLink() const;
 
 	};
 }

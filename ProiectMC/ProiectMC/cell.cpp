@@ -56,4 +56,13 @@ bool Cell::hasPeg() const {
 	return true;
 }
 
+bool twixt::Cell::hasLink() const
+{
+	if (m_link == nullptr) {
+		return false;
+	}
+
+	return true;
+}
+
 
