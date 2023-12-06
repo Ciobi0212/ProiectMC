@@ -31,3 +31,10 @@ void Peg::setColor(Color color) {
 	m_color = color;
 }
 
+bool twixt::Peg::operator==(const Peg& peg) const
+{
+	if (m_x == peg.getX() && m_y == peg.getY() && m_color == peg.getColor())
+		return true;
+	return false;
+}
+

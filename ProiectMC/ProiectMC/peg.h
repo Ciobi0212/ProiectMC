@@ -17,6 +17,7 @@ namespace twixt {
 		void setX(uint16_t x);
 		void setY(uint16_t y);
 		void setColor(Color color);
+		bool operator==(const Peg& peg) const;
 
 
 	private:
