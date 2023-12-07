@@ -38,3 +38,10 @@ bool twixt::Peg::operator==(const Peg& peg) const
 	return false;
 }
 
+Position twixt::Peg::getPosition() const
+{
+	return std::make_pair(m_x, m_y);
+}
+
+
+
