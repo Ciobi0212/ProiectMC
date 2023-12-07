@@ -6,7 +6,6 @@
 #include "cell.h"
 
 namespace twixt {
-
 	 class Board {
 	public:
 		Board();
@@ -15,7 +14,12 @@ namespace twixt {
 		void drawBoard();
 		size_t getSize() const;
 		
-		using Position = std::pair<uint8_t, uint8_t>;
+		using Position = std::pair<std::size_t, std::size_t>;
+		struct PositionHash {
+			std::size_t operator()(const Position& pos) const {
+				return std::hash<std::size_t>()(pos.first) ^ std::hash<std::size_t>()(pos.second);
+			}
+		};
 
 	    bool isInBounds(const Position& pos) const;
 
@@ -23,8 +27,10 @@ namespace twixt {
 		const Cell& operator[](const Position& pos) const;
 		
 
-	private:
-		static const size_t BOARD_SIZE{ 8 };
+	public:
+		static constexpr size_t BOARD_SIZE{ 5 };
+		
+	 private:
 		std::vector<std::vector<Cell>> m_board;
 	};
 }

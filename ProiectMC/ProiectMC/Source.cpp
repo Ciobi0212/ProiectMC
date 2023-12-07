@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "TwixtGame.h"
 
@@ -13,14 +12,13 @@ int main() {
 
 	TwixtGame game(*board, *player1, *player2, *player1);
 
-	player1->placePegOnBoard(*board, { 1, 1 });
-	player1->placePegOnBoard(*board, { 1, 2 });
-	player1->placePegOnBoard(*board, { 3, 2 });
-	player2->placePegOnBoard(*board, { 1, 3 });
-	
-	auto links = player1->getLinks();
+	player1->placePegOnBoard(*board, { 0, 1 });
+	//place the pegs in a manner so that player1 wins
+	player1->placePegOnBoard(*board, {2,2});
+	player1->placePegOnBoard(*board, { 4,1 });
 	
 	board->drawBoard();
+	std::cout<<player1->checkWin(*board);
 	
 	
 }

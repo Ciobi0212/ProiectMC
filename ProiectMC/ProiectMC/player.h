@@ -22,14 +22,15 @@ namespace twixt {
 		//std::vector<Peg*> setPegs(const std::vector<Peg&>& pegs);
 		//std::vector<Link*> setLinks(const std::vector<Link&>& links);
 		
-		using Position = std::pair<size_t, size_t>;
-		
 		void placePegOnBoard(Board& board, const Position& pos);
 		void placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2);
-
 		void addPeg(Peg& peg);
 		void addLink(Link& link);
+		
 		bool linkNeedsToBePlaced(Board& board, const Position& pos1, const Position& pos2) const;
+		bool checkForWin(Board& board);
+		
+		
 	
 		
 	private:

@@ -7,12 +7,13 @@
 
 #include <optional>;
 #include <string>;
+#include <vector>
 
 namespace twixt {
 	 class Cell {
 	private:
 		Peg* m_peg;
-		Link* m_link;
+		std::vector<Link*> m_links;
 		Color m_color;
 
 	public:
@@ -20,13 +21,13 @@ namespace twixt {
 		~Cell();
 		Color getColor() const;
 	    Peg& getPeg() const;
-	    Link& getLink() const;
+		std::vector<Link*> getLinks() const;
 		void setColor(Color color);
-		void setPeg(Peg*& peg);
-		void setLink(Link*& link);
+		void setPeg(Peg* peg);
+		void addLink(Link* link);
 		bool hasColor() const;
 		bool hasPeg() const;
-		bool hasLink() const;
+		bool hasLinks() const;
 
 	};
 }

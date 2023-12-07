@@ -11,7 +11,7 @@ namespace twixt {
 		Peg getP2() const;
 		void setP1(Peg& p1);
 		void setP2(Peg& p2);
-	
+		Peg& getOtherEnd(const Peg& peg) const;
 
 	private:
 		Peg& m_p1;

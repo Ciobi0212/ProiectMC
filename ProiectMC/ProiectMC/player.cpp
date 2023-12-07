@@ -1,6 +1,7 @@
 #include "player.h"
 using namespace twixt;
-
+#include <unordered_set>
+#include <queue>
 
 Player::Player() = default;
 
@@ -54,12 +55,47 @@ bool twixt::Player::linkNeedsToBePlaced(Board& board, const Position& pos1, cons
 		and (board[pos1].getColor() == board[pos2].getColor()));
 }
 
+bool twixt::Player::checkForWin(Board& board)
+{
+	std::unordered_set<Position, PositionHash> visited;
+
+	for (size_t i = 0; i < Board::BOARD_SIZE; i++) {
+		if (board[{0, i}].hasLinks())
+		{
+			Position currentPos = { 0,i };
+			std::queue<Peg> bfsQueue;
+			bfsQueue.push(board[currentPos].getPeg());
+			visited.insert(currentPos);
+			while (!bfsQueue.empty()) {
+				Peg currentPeg = bfsQueue.front();
+				Position currentPos = currentPeg.getPosition();
+				bfsQueue.pop();
+				auto& [line, column] = currentPos;
+
+				if ((line == Board::BOARD_SIZE - 1 && m_color == Color::RED) || (column == Board::BOARD_SIZE - 1 && m_color == Color::BLUE))
+					return true;
+
+				std::vector<Link*> links = std::move(board[currentPos].getLinks());
+				for (Link* link : links) {
+					Peg& nextPeg = link->getOtherEnd(board[currentPos].getPeg());
+					Position nextPos = nextPeg.getPosition();
+					if (visited.find(nextPos) == visited.end()) {
+						bfsQueue.push(nextPeg);
+						visited.insert(nextPos);
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2)
 {
 	Link* linkToAdd = new Link{ board[pos1].getPeg(), board[pos2].getPeg() };
-	board[pos1].setLink(linkToAdd);
-	board[pos2].setLink(linkToAdd);
-	addLink(*linkToAdd);
+	board[pos1].addLink(linkToAdd);
+	board[pos2].addLink(linkToAdd);
+	this->addLink(*linkToAdd);
 }
 
 //std::vector<Link*> Player::setLinks(const std::vector<Link*>& links) {

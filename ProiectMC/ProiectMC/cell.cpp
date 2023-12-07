@@ -4,7 +4,7 @@ using namespace twixt;
 
 Cell::Cell() {
 	m_peg = nullptr;
-	m_link = nullptr;
+	m_links = std::vector<Link*>();
 	m_color = Color::NONE;
 }
 
@@ -21,23 +21,22 @@ Peg& Cell::getPeg() const {
 		throw std::exception("Cell has no peg");
 }
 
-Link& Cell::getLink() const {
-	if (m_link)
-		return *m_link;
-	else
-		throw std::exception("Cell has no link");
+std::vector<Link*> twixt::Cell::getLinks() const
+{
+	return m_links;
 }
 
 void Cell::setColor(Color color) {
 	m_color = color;
 }
 
-void Cell::setPeg(Peg*& peg) {
+void Cell::setPeg(Peg* peg) {
 	m_peg = peg;
 }
 
-void Cell::setLink(Link*& link) {
-	m_link = link;
+void twixt::Cell::addLink(Link* link)
+{
+	m_links.emplace_back(link);
 }
 
 bool Cell::hasColor() const {
@@ -56,9 +55,9 @@ bool Cell::hasPeg() const {
 	return true;
 }
 
-bool twixt::Cell::hasLink() const
+bool twixt::Cell::hasLinks() const
 {
-	if (m_link == nullptr) {
+	if (m_links.size() == 0){
 		return false;
 	}
 

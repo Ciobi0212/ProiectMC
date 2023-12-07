@@ -1,5 +1,6 @@
 #include "board.h";
-
+#include <queue>;
+#include <unordered_set>
 using namespace twixt;
 
 Board::Board()  {
@@ -15,7 +16,7 @@ void twixt::Board::drawBoard()
 {
 	for (uint8_t i = 0; i < BOARD_SIZE; i++) {
 		for (uint8_t j = 0; j < BOARD_SIZE; j++) {
-			Cell& curentCell = m_board[i][j];
+				Cell& curentCell = m_board[i][j];
 				Color color = curentCell.getColor();
 				switch (color) {
 				case Color::RED:
