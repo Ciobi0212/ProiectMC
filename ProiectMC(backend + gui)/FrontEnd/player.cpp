@@ -179,6 +179,15 @@ void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const P
 	this->addLink(*linkToAdd);
 }
 
+void twixt::Player::removeLinkFromBoard(Board& board, Link* linkToRemove)
+{
+	Position pos1 = linkToRemove->getP1().getPosition();
+	Position pos2 = linkToRemove->getP2().getPosition();
+	board[pos1].removeLink(linkToRemove);
+	board[pos2].removeLink(linkToRemove);
+	delete linkToRemove;
+}
+
 //std::vector<Link*> Player::setLinks(const std::vector<Link*>& links) {
 //	this->m_links = links;
 //	return this->m_links;

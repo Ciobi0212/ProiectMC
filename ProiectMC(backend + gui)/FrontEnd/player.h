@@ -30,6 +30,7 @@ namespace twixt {
 		
 		void placePegOnBoard(Board& board, const Position& pos);
 		void placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2);
+		void removeLinkFromBoard(Board& board, Link* linkToRemove);
 		void addPeg(Peg& peg);
 		void addLink(Link& link);
 		

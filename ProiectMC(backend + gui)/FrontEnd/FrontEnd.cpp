@@ -9,8 +9,6 @@ FrontEnd::FrontEnd(QWidget* parent)
 	boardSize = game.getBoard().getSize();
 	radius = 5;
 	cellSize = widthRes / boardSize;
-	isDrawingLink = false;
-	setMouseTracking(true);
 
 	//set screenCoords for all cells
 	for (size_t row = 0; row < boardSize; ++row) {
@@ -47,28 +45,6 @@ void FrontEnd::drawBoard(QPainter& painter)
 	}
 }
 
-//void FrontEnd::drawPegsAndLinks(QPainter& painter)
-//{
-//    Board& board = game.getBoard();
-//    Player& currentPlayer = game.getCurrentPlayer();
-//
-//    size_t boardSize = board.getSize();
-//    size_t cellSize = widthRes / boardSize;
-//    size_t radius = 5;
-//
-//    for (size_t row = 0; row < boardSize; ++row) {
-//        for (size_t col = 0; col < boardSize; ++col) {
-//            painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
-//
-//            if (isCornerCell(row, col, boardSize)) {
-//                continue;
-//            }
-//
-//            drawCellContent(painter, board, currentPlayer, row, col);
-//        }
-//    }
-//}
-//
 void FrontEnd::drawCellContent(QPainter& painter, Cell& cell)
 {
 	if (cell.hasPeg()) {
@@ -112,58 +88,6 @@ void FrontEnd::drawLinksOfCell(QPainter& painter, const Cell& cell)
 	}
 }
 
-//
-//void FrontEnd::drawEmptyCell(QPainter& painter, size_t row, size_t col)
-//{
-//    painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
-//    size_t centerX = col * cellSize + cellSize / 2 - radius;
-//    size_t centerY = row * cellSize + cellSize / 2 - radius;
-//    painter.drawEllipse(centerX, centerY, radius * 2, radius * 2);
-//}
-//
-//void FrontEnd::drawPeg(QPainter& painter, size_t row, size_t col)
-//{
-//    size_t centerX = col * cellSize + cellSize / 2 - radius;
-//    size_t centerY = row * cellSize + cellSize / 2 - radius;
-//    painter.drawEllipse(centerX, centerY, radius * 2, radius * 2);
-//}
-//
-//
-//void FrontEnd::setPegColor(QPainter& painter, Color color)
-//{
-//    if (color == Color::RED) {
-//		painter.setBrush(QBrush(Qt::red, Qt::SolidPattern));
-//    }
-//    else {
-//		painter.setBrush(QBrush(Qt::blue, Qt::SolidPattern));
-//    }
-//}
-//
-//void FrontEnd::setLinkColor(QPainter& painter, Color color)
-//{
-//    if (color == Color::RED) {
-//        painter.setPen(QPen(Qt::red, 3, Qt::SolidLine, Qt::RoundCap));
-//    }
-//    else if (color == Color::BLUE) {
-//        painter.setPen(QPen(Qt::blue, 3, Qt::SolidLine, Qt::RoundCap));
-//    }
-//    else if (color == Color::RED_TRANSPARENT) {
-//        QColor transparentRed = QColor(Qt::red);
-//        transparentRed.setAlpha(10);
-//        painter.setPen(QPen(Qt::green, 3, Qt::SolidLine, Qt::RoundCap));
-//    }
-//    else if (color == Color::BLUE_TRANSPARENT) {
-//        QColor transparentBlue = QColor(Qt::blue);
-//        transparentBlue.setAlpha(10);
-//        painter.setPen(QPen(transparentBlue, 3, Qt::SolidLine, Qt::RoundCap));
-//    }
-//}
-//
-//void FrontEnd::drawLinks(QPainter& painter, const Board& board, size_t row, size_t col)
-//{
-    
-//}
-//
 bool FrontEnd::isCornerCell(size_t row, size_t col, size_t boardSize)
 {
 	return (row == 0 && col == 0) || (row == 0 && col == boardSize - 1) ||
@@ -179,20 +103,33 @@ bool FrontEnd::isClickOnCell(QPoint click, Cell& cell)
 }
 bool FrontEnd::isClickOnLink(QPoint click, Link* link)
 {
-	//use screnn coordinates
 	auto [xStart, yStart] = link->getP1().getPositionOnScreen();
 	auto [xEnd, yEnd] = link->getP2().getPositionOnScreen();
-	double slope = static_cast<double>(yEnd - yStart) / static_cast<double>(xEnd - xStart);
-	double expectedY = slope * static_cast<double>(click.x() - xStart) + yStart;
-	if (abs(expectedY - click.y()) < 10) {
-		return true;
+
+	
+	size_t minX = std::min(xStart, xEnd);
+	size_t minY = std::min(yStart, yEnd);
+	size_t maxX = std::max(xStart, xEnd);
+	size_t maxY = std::max(yStart, yEnd);
+
+	if (click.x() < minX || click.x() > maxX || click.y() < minY || click.y() > maxY) {
+		return false;
 	}
+
+	double A = yStart - yEnd;
+	double B = xEnd - xStart;
+	double C = xStart * yEnd - xEnd * yStart;
+
+	double distance = std::abs(A * click.x() + B * click.y() + C) / std::sqrt(A * A + B * B);
+
+	double threshold = 8.0; // seems to be good enough
+
+	return distance < threshold;
 }
 void FrontEnd::handleCellClick(const Position& pos, Player& currentPlayer, Board& board)
 {
 	if (board[pos].hasPeg()) {
 		if (board[pos].getPeg().getColor() == currentPlayer.getColor()) {
-			isDrawingLink = true;
 		}
 	}
 		
@@ -205,6 +142,14 @@ void FrontEnd::handleCellClick(const Position& pos, Player& currentPlayer, Board
 	}
 
 }
+void FrontEnd::handleLinkClick(Link* link, Player& currentPlayer, Board& board)
+{
+	if (currentPlayer.getColor() == link->getColor()) {
+		currentPlayer.removeLinkFromBoard(board, link);
+		repaint();
+	}
+		
+}
 //
 void FrontEnd::paintEvent(QPaintEvent* event)
 {
@@ -213,39 +158,15 @@ void FrontEnd::paintEvent(QPaintEvent* event)
 
 
 	drawBoard(painter);
-	if (isDrawingLink) {
-		painter.setBrush(QBrush(Qt::red, Qt::SolidPattern));
-		painter.drawLine(startPoint, endPoint);
-	}
 }
-void FrontEnd::mouseMoveEvent(QMouseEvent* event) {
-	if (isDrawingLink) {
-		endPoint = event->pos();
-		repaint();
-	}
-}
-//
-//void FrontEnd::mouseMoveEvent(QMouseEvent* event)
-//{
-//	Board& board = game.getBoard();
-//	Player& currentPlayer = game.getCurrentPlayer();
-//	QPoint mousePos = event->pos();
-//	uint8_t alowedDistance = 10;
-//
-//    //get the cooord of the cell we are on 
-//	size_t xCell = mousePos.y() / cellSize;
-//	size_t yCell = mousePos.x() / cellSize;
-//   
-//}
-//
+
 void FrontEnd::mousePressEvent(QMouseEvent* event)
 {
     Board& board = game.getBoard();
     Player& currentPlayer = game.getCurrentPlayer();
 
     QPoint mousePos = event->pos();
-	startPoint = mousePos;
-	endPoint = mousePos;
+	
     //iterate over cells and check if the click was on a cell
 	for (size_t row = 0; row < board.getSize(); row++) {
 		for (size_t col = 0; col < board.getSize(); col++) {
@@ -263,64 +184,10 @@ void FrontEnd::mousePressEvent(QMouseEvent* event)
 			//check if click was on a link
 			for (auto link : currentCell.getLinks()) {
 				if (isClickOnLink(mousePos, link)) {
-					currentPlayer.removeLinkFromBoard(board, link);
-					repaint();
+					handleLinkClick(link, currentPlayer, board);
 					return;
 				}
 			}
 		}
 	}
-}
-
-    //// Get coordinates of the center of the circle
-    //size_t xOfCircle = yCell * cellSize + cellSize / 2 - radius;
-    //size_t yOfCircle = xCell * cellSize + cellSize / 2 - radius;
-
-    //Cell& cell = board[{xCell, yCell}];
-
-    //
-    //if (!cell.hasPeg() && currentPlayer.pegCanBePlaced(board, { xCell, yCell })) {
-    //    // Check if the click was on the circle
-    //    if (sqrt(pow(mousePos.x() - xOfCircle, 2) + pow(mousePos.y() - yOfCircle, 2)) > radius * 2) {
-    //        return;
-    //    }
-    //    currentPlayer.placePegOnBoard(board, { xCell, yCell });
-    //    repaint();
-    //    if (currentPlayer.checkForWin(board)) {
-    //        QMessageBox msgBox;
-    //        msgBox.setWindowTitle("Game Over");
-    //        // Set text to "Player" currentPlayer.getName() "has won the game"
-    //        QString content = "Player " + QString::fromStdString(currentPlayer.getName()) + " has won the game";
-    //        msgBox.setText(content);
-    //        msgBox.exec();
-    //    }
-    //    game.switchPlayer();
-    //}
-
-    //else {
-
-    //    int alowedDistance = 20;
-    //    for (Link* link : board[{xCell, yCell}].getLinks()) {
-    //        //determine the closest link to the mouse
-    //        auto [yStart, xStart] = link->getP1().getPosition();
-    //        auto [yEnd, xEnd] = link->getP2().getPosition();
-    //        
-    //        // Translate the link coords to screen coords
-    //        yStart = yStart * cellSize + cellSize / 2.0 - radius;
-    //        xStart = xStart * cellSize + cellSize / 2.0 - radius;
-    //        yEnd = yEnd * cellSize + cellSize / 2.0 - radius;
-    //        xEnd = xEnd * cellSize + cellSize / 2.0 - radius;
-
-    //        // Ensure floating-point division for the slope calculation
-           
-
-    //    }
-    //}
-
-
-void FrontEnd::mouseReleaseEvent(QMouseEvent* event)
-{
-	endPoint = event->pos();
-	isDrawingLink = false;
-	//manage link
 }

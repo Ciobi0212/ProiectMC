@@ -23,21 +23,17 @@ public:
     ~FrontEnd();
     void drawBoard(QPainter& painter);
 
-    void drawPegsAndLinks(QPainter& painter);
     void drawCellContent(QPainter& painter, Cell& cell);
     void drawEmptyCell(QPainter& painter, Cell& cell);
     void drawPeg(QPainter& painter, Peg& peg);
-    void setPegColor(QPainter& painter, Color color);
-    void setLinkColor(QPainter& painter, Color color);
     void drawLinksOfCell(QPainter& painter, const Cell& cell);
     bool isCornerCell(size_t row, size_t col, size_t boardSize);
 	bool isClickOnCell(QPoint click, Cell& cell);
 	bool isClickOnLink(QPoint click, Link* link);
 	void handleCellClick(const Position& pos, Player& currentPlayer, Board& board);
+	void handleLinkClick(Link* link, Player& currentPlayer, Board& board);
     void paintEvent(QPaintEvent* event) override;
-    void mouseMoveEvent(QMouseEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
-	void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
     Ui::FrontEndClass ui;
@@ -45,7 +41,4 @@ private:
     size_t boardSize;
     size_t radius;
     size_t cellSize;
-    QPoint startPoint;
-	QPoint endPoint;
-	bool isDrawingLink;
 };

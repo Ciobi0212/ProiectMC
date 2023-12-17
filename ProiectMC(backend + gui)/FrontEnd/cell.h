@@ -30,6 +30,7 @@ namespace twixt {
 		QPoint getPositionOnScreen() const;
 		void setPeg(Peg* peg);
 		void addLink(Link* link);
+		void removeLink(Link* link);
 		bool hasColor() const;
 		bool hasPeg() const;
 		bool hasLinks() const;

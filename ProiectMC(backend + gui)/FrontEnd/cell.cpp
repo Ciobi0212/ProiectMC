@@ -49,6 +49,11 @@ void twixt::Cell::addLink(Link* link)
 	m_links.insert(link);
 }
 
+void twixt::Cell::removeLink(Link* link)
+{
+	m_links.erase(link);
+}
+
 bool Cell::hasColor() const {
 	if (m_color == Color::NONE) {
 		return false;
