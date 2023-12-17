@@ -30,7 +30,6 @@ void FrontEnd::drawBoard(QPainter& painter)
 
 	size_t boardSize = board.getSize();
 
-
 	for (size_t row = 0; row < boardSize; ++row) {
 		for (size_t col = 0; col < boardSize; ++col) {
 			painter.setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap));
@@ -43,6 +42,19 @@ void FrontEnd::drawBoard(QPainter& painter)
 			drawCellContent(painter, cell);
 		}
 	}
+	
+	drawBaseDelimitators(painter);
+}
+
+void FrontEnd::drawBaseDelimitators(QPainter& painter)
+{
+	painter.setPen(QPen(Qt::red, 3, Qt::SolidLine, Qt::RoundCap));
+	painter.drawLine(0, cellSize, width(), cellSize);
+	painter.drawLine(0, height() - cellSize - 7, width(), height() - cellSize - 7);
+
+	painter.setPen(QPen(Qt::blue, 3, Qt::SolidLine, Qt::RoundCap));
+	painter.drawLine(cellSize, 0, cellSize, height());
+	painter.drawLine(width() - cellSize - 7, 0, width() - cellSize - 7, height());
 }
 
 void FrontEnd::drawCellContent(QPainter& painter, Cell& cell)
@@ -137,6 +149,10 @@ void FrontEnd::handleCellClick(const Position& pos, Player& currentPlayer, Board
 		if (currentPlayer.pegCanBePlaced(board, pos)) {
 			currentPlayer.placePegOnBoard(board, pos);
 			repaint();
+			if (currentPlayer.checkForWin(board)) {
+				winMessage(currentPlayer);
+				exit(0);
+			}
 			game.switchPlayer();
 		}
 	}
@@ -190,4 +206,16 @@ void FrontEnd::mousePressEvent(QMouseEvent* event)
 			}
 		}
 	}
+}
+
+void FrontEnd::winMessage(const Player& player)
+{
+	QMessageBox msgBox;
+	//use player name
+	if (player.getColor() == Color::RED)
+		msgBox.setText("Red player won!");
+	else
+		msgBox.setText("Blue player won!");
+	
+	msgBox.exec();
 }

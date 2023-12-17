@@ -141,9 +141,14 @@ bool twixt::Player::checkForWin(Board& board)
 	std::unordered_set<Position, PositionHash> visited;
 
 	for (size_t i = 0; i < Board::BOARD_SIZE; i++) {
-		if (board[{0, i}].hasLinks())
+		Position currentPos;
+		if(this->getColor() == Color::RED)
+			currentPos = { 0,i };
+		else
+		    currentPos = { i,0 };
+		
+		if (board[currentPos].hasLinks())
 		{
-			Position currentPos = { 0,i };
 			std::queue<Peg> bfsQueue;
 			bfsQueue.push(board[currentPos].getPeg());
 			visited.insert(currentPos);

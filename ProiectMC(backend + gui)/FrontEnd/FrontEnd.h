@@ -22,7 +22,7 @@ public:
     FrontEnd(QWidget* parent = nullptr);
     ~FrontEnd();
     void drawBoard(QPainter& painter);
-
+    void drawBaseDelimitators(QPainter& painter);
     void drawCellContent(QPainter& painter, Cell& cell);
     void drawEmptyCell(QPainter& painter, Cell& cell);
     void drawPeg(QPainter& painter, Peg& peg);
@@ -34,6 +34,7 @@ public:
 	void handleLinkClick(Link* link, Player& currentPlayer, Board& board);
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
+	void winMessage(const Player& player);
 
 private:
     Ui::FrontEndClass ui;
