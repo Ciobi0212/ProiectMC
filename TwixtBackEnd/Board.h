@@ -1,19 +1,18 @@
 #pragma once
-
-#include <iostream>;
-#include <vector>;
-
-#include "cell.h"
+#include <vector>
+#include <utility>
+#include <unordered_set>
+#include "Cell.h"
 
 namespace twixt {
-	 class Board {
+	class __declspec(dllexport) Board {
 	public:
-		Board();
+		Board(size_t BOARD_SIZE = 24);
 		~Board();
-		
+
 		void drawBoard();
 		size_t getSize() const;
-		
+
 		using Position = std::pair<std::size_t, std::size_t>;
 		struct PositionHash {
 			std::size_t operator()(const Position& pos) const {
@@ -21,16 +20,14 @@ namespace twixt {
 			}
 		};
 
-	    bool isInBounds(const Position& pos) const;
+		bool isInBounds(const Position& pos) const;
 
 		Cell& operator[](const Position& pos);
 		const Cell& operator[](const Position& pos) const;
-		
 
-	public:
-		static constexpr size_t BOARD_SIZE{ 8 };
-		
-	 private:
+	private:
 		std::vector<std::vector<Cell>> m_board;
+		size_t BOARD_SIZE;
 	};
 }
+

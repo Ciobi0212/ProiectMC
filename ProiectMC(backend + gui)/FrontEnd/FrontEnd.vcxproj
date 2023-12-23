@@ -64,6 +64,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -89,22 +99,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoardWidget.cpp" />
+    <ClCompile Include="GameStatsWidget.cpp" />
     <ClCompile Include="link.cpp" />
+    <ClCompile Include="MCTS.cpp" />
+    <ClCompile Include="PMT.cpp" />
     <ClCompile Include="peg.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="TwixtGame.cpp" />
     <QtRcc Include="FrontEnd.qrc" />
+    <QtUic Include="BoardWidget.ui" />
     <QtUic Include="FrontEnd.ui" />
     <QtMoc Include="FrontEnd.h" />
     <ClCompile Include="board.cpp" />
     <ClCompile Include="cell.cpp" />
     <ClCompile Include="FrontEnd.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="GameStatsWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <QtMoc Include="BoardWidget.h" />
     <ClInclude Include="cell.h" />
+    <QtMoc Include="GameStatsWidget.h" />
     <ClInclude Include="link.h" />
+    <ClInclude Include="MCTS.h" />
+    <ClInclude Include="PMT.h" />
     <ClInclude Include="peg.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="TwixtGame.h" />

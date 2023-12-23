@@ -1,0 +1,205 @@
+PLACE_PEG
+0
+1 2
+1 2
+score: -139676
+PLACE_PEG
+0
+4 1
+4 1
+score: -79836
+PLACE_PEG
+0
+6 3
+6 3
+score: -149553
+PLACE_PEG
+0
+6 4
+6 4
+score: -149665
+PLACE_PEG
+0
+4 3
+4 3
+score: -99769
+PLACE_PEG
+0
+3 3
+3 3
+score: -89813
+PLACE_PEG
+0
+4 2
+4 2
+score: -159580
+PLACE_PEG
+0
+5 5
+5 5
+score: -179523
+PLACE_PEG
+0
+5 4
+5 4
+score: -179508
+PLACE_PEG
+0
+5 1
+5 1
+score: -159668
+PLACE_PEG
+0
+5 2
+5 2
+score: -259287
+PLACE_PEG
+0
+6 2
+6 2
+score: -109745
+PLACE_PEG
+0
+6 5
+6 5
+score: -179473
+PLACE_PEG
+0
+3 1
+3 1
+score: -179493
+PLACE_PEG
+0
+7 6
+7 6
+score: -328723
+PLACE_PEG
+0
+4 4
+4 4
+score: -119694
+PLACE_PEG
+0
+2 1
+2 1
+score: -139700
+PLACE_PEG
+0
+1 6
+1 6
+score: -79718
+PLACE_PEG
+0
+2 3
+2 3
+score: -149524
+PLACE_PEG
+0
+1 4
+1 4
+score: -199535
+PLACE_PEG
+0
+3 6
+3 6
+score: -209429
+PLACE_PEG
+0
+7 1
+7 1
+score: -438389
+PLACE_PEG
+0
+0 2
+0 2
+score: -378717
+PLACE_PEG
+0
+0 1
+0 1
+score: -308891
+PLACE_PEG
+0
+1 5
+1 5
+score: -179472
+PLACE_PEG
+0
+7 5
+7 5
+score: -418558
+PLACE_PEG
+0
+0 3
+0 3
+score: -209218
+PLACE_PEG
+0
+2 2
+2 2
+score: -179449
+PLACE_PEG
+0
+5 6
+5 6
+score: -149587
+PLACE_PEG
+0
+4 6
+4 6
+score: -309315
+PLACE_PEG
+0
+7 2
+7 2
+score: -239076
+PLACE_PEG
+0
+3 4
+3 4
+score: -159606
+PLACE_PEG
+0
+2 4
+2 4
+score: -119586
+PLACE_PEG
+0
+6 6
+6 6
+score: -179432
+PLACE_PEG
+0
+2 6
+2 6
+score: 1519005
+PLACE_PEG
+0
+0 4
+0 4
+score: -259103
+PLACE_PEG
+0
+7 3
+7 3
+score: -408555
+PLACE_PEG
+0
+0 6
+0 6
+score: -458413
+PLACE_PEG
+0
+3 5
+3 5
+score: -119704
+PLACE_PEG
+0
+6 1
+6 1
+score: -159588
+best move: 
+PLACE_PEG
+0
+2 6
+2 6

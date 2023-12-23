@@ -3,43 +3,28 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_FrontEnd.h"
 #include "TwixtGame.h"
-#include <QPainter>
-#include <QMouseEvent>
-#include <cmath>
-#include <qmessagebox.h>
+#include "BoardWidget.h"
+#include "GameStatsWidget.h"
 
 using namespace twixt;
 
 constexpr uint16_t widthRes = 800;
 constexpr uint16_t heightRes = 800;
-constexpr uint8_t radius = 5;
+
 
 class FrontEnd : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    FrontEnd(QWidget* parent = nullptr);
-    ~FrontEnd();
-    void drawBoard(QPainter& painter);
-    void drawBaseDelimitators(QPainter& painter);
-    void drawCellContent(QPainter& painter, Cell& cell);
-    void drawEmptyCell(QPainter& painter, Cell& cell);
-    void drawPeg(QPainter& painter, Peg& peg);
-    void drawLinksOfCell(QPainter& painter, const Cell& cell);
-    bool isCornerCell(size_t row, size_t col, size_t boardSize);
-	bool isClickOnCell(QPoint click, Cell& cell);
-	bool isClickOnLink(QPoint click, Link* link);
-	void handleCellClick(const Position& pos, Player& currentPlayer, Board& board);
-	void handleLinkClick(Link* link, Player& currentPlayer, Board& board);
-    void paintEvent(QPaintEvent* event) override;
-    void mousePressEvent(QMouseEvent* event) override;
-	void winMessage(const Player& player);
+	FrontEnd(TwixtGame& game, QWidget* parent = nullptr);
+	~FrontEnd();
+
+	
 
 private:
-    Ui::FrontEndClass ui;
-    TwixtGame game;
-    size_t boardSize;
-    size_t radius;
-    size_t cellSize;
+	Ui::FrontEndClass ui;
+	TwixtGame& game;
+	BoardWidget* boardWidget;
+	//GameStatsWidget* gameStatsWidget;
 };

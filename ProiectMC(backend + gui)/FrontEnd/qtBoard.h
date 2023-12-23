@@ -8,7 +8,7 @@
 namespace twixt {
 	 class Board {
 	public:
-		Board();
+		Board(size_t BOARD_SIZE = 24);
 		~Board();
 		
 		void drawBoard();
@@ -26,11 +26,8 @@ namespace twixt {
 		Cell& operator[](const Position& pos);
 		const Cell& operator[](const Position& pos) const;
 		
-
-	public:
-		static constexpr size_t BOARD_SIZE{ 8 };
-		
 	 private:
 		std::vector<std::vector<Cell>> m_board;
+		size_t BOARD_SIZE;
 	};
 }
