@@ -9,7 +9,7 @@ PMT::~PMT() = default;
 
 Action PMT::getBestAction(TwixtGame& game, size_t numSimulations)
 {
-	std::unordered_map<Action, long long, ActionHash> evaluations;
+	std::unordered_map<Action, double, ActionHash> evaluations;
 	ActionSet validActions = game.getValidActions();
 	std::random_device rd;
 	std::mt19937 eng(rd());
@@ -21,7 +21,7 @@ Action PMT::getBestAction(TwixtGame& game, size_t numSimulations)
 		ActionSet nextPegMoves = gameCopy.getValidPegActions();
 		ActionSet nextLinkActions = gameCopy.getValidLinkActions();
 		std::vector<Action> simulationMoves;
-		long long score = 10000;
+		double score = 10000.0;
 		
 		while (!nextPegMoves.empty() || !nextLinkActions.empty()) {
 			Action randomMove;
@@ -34,6 +34,9 @@ Action PMT::getBestAction(TwixtGame& game, size_t numSimulations)
 				auto it = nextPegMoves.begin();
 				std::advance(it, randomIndexPeg);
 				randomMove = *it;
+				if (randomMove == Action(ActionType::PLACE_PEG, Position(6,2), Position(6,2)))
+					int a = 2;
+					
 				simulationMoves.push_back(randomMove);
 				gameCopy = gameCopy.getNextState(randomMove);
 				}
@@ -54,18 +57,24 @@ Action PMT::getBestAction(TwixtGame& game, size_t numSimulations)
 		}
 		if (player.getColor() == game.getCurrentPlayer().getColor() && player.checkForWin(gameCopy.getBoard())) {
 			//put in evaluations the latest move from simulationMoves that is in validActions
-			for (int index = simulationMoves.size() - 1; index >= 0 ; --index) {
+			for (int index = simulationMoves.size() - 1; index >= 0; --index) {
 				if (validActions.find(simulationMoves[index]) != validActions.end() && std::get<0>(simulationMoves[index]) == ActionType::PLACE_PEG) {
-					evaluations[simulationMoves[index]] += score;
-					break;
+					if (simulationMoves[index] == Action(ActionType::PLACE_PEG, Position(6, 2), Position(6, 2)))
+						int a = 2;
+					double reward = (double)((score / simulationMoves.size()) - index);
+					evaluations[simulationMoves[index]] += reward;
 				}
 			}
 		}
-		else if (gameCopy.isDraw() && player.getColor() == game.getCurrentPlayer().getColor()) {
+		else if (player.getColor() != game.getCurrentPlayer().getColor() && player.checkForWin(gameCopy.getBoard())) {
 			for (int index = simulationMoves.size() - 1; index >= 0; --index) {
 				if (validActions.find(simulationMoves[index]) != validActions.end() && std::get<0>(simulationMoves[index]) == ActionType::PLACE_PEG) {
-					evaluations[simulationMoves[index]] += score/2;
-					break;
+					if (simulationMoves[index] == Action(ActionType::PLACE_PEG, Position(6, 2), Position(6, 2)))
+						int a = 2;
+					double reward = (double)((score / simulationMoves.size()) - index) / 2.0;
+					evaluations[simulationMoves[index]] -= reward;
+					
+					
 				}
 			}
 		}
@@ -73,8 +82,10 @@ Action PMT::getBestAction(TwixtGame& game, size_t numSimulations)
 			//put in evaluations the latest move from simulationMoves that is in validActions
 			for (int index = simulationMoves.size() - 1; index >= 0; --index) {
 				if (validActions.find(simulationMoves[index]) != validActions.end() && std::get<0>(simulationMoves[index]) == ActionType::PLACE_PEG) {
-					evaluations[simulationMoves[index]] -= score;
-					break;
+					if (simulationMoves[index] == Action(ActionType::PLACE_PEG, Position(6, 2), Position(6, 2)))
+						int a = 2;
+					double reward = (double)((score / simulationMoves.size()) - index) / 2.0;
+					evaluations[simulationMoves[index]] += reward;
 				}
 			}
 		}

@@ -38,7 +38,7 @@ class TwixtGame
 public:
 	TwixtGame();
 	~TwixtGame();
-	TwixtGame(const TwixtGame& other);
+	TwixtGame(TwixtGame& other);
 	Board& getBoard();
 	void switchPlayer();
 	Player& getCurrentPlayer();
@@ -50,7 +50,6 @@ public:
 	ActionSet getValidLinkActions();
 	bool isGameOver();
 	bool isDraw();
-	int gameResult();
 	TwixtGame getNextState(Action& action);
 	std::pair<double,bool> getValueAndCheckForWin(TwixtGame& state);
 	Player& getOpponent(Player& currentPlayer);
@@ -61,7 +60,7 @@ private:
 	Board board;
 	Player firstPlayer;
 	Player secondPlayer;
-	Player* currentPlayer;
+	Color currentPlayer;
 
 };
 

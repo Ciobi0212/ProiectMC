@@ -7,6 +7,18 @@ Player::Player() = default;
 
 Player::Player(const std::string& name, Color color, BaseType baseType, uint8_t numOfPegsLeft, uint8_t numOfLinksLeft, QColor qcolor) : m_name{ name }, m_color{ color }, m_baseType{ baseType }, m_qcolor{ qcolor }, m_numOfPegsLeft{ numOfPegsLeft }, m_numOfLinksLeft{numOfLinksLeft} {}
 
+twixt::Player::Player(const Player& other)
+{
+	m_name = other.m_name;
+	m_color = other.m_color;
+	m_baseType = other.m_baseType;
+	m_qcolor = other.m_qcolor;
+	m_numOfPegsLeft = other.m_numOfPegsLeft;
+	m_numOfLinksLeft = other.m_numOfLinksLeft;
+	m_pegs = other.m_pegs;
+	m_links = other.m_links;
+}
+
 Player::~Player() = default;
 
 const std::string& Player::getName() const {
@@ -215,6 +227,21 @@ bool twixt::Player::checkForWin(Board& board)
 		}
 	}
 	return false;
+}
+
+Player& twixt::Player::operator=(const Player& other)
+{
+	if (this != &other) {
+		m_name = other.m_name;
+		m_color = other.m_color;
+		m_baseType = other.m_baseType;
+		m_qcolor = other.m_qcolor;
+		m_numOfPegsLeft = other.m_numOfPegsLeft;
+		m_numOfLinksLeft = other.m_numOfLinksLeft;
+		m_pegs = other.m_pegs;
+		m_links = other.m_links;
+	}
+	return *this;
 }
 
 void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2)

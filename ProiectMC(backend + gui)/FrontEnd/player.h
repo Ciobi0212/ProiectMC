@@ -16,6 +16,7 @@ namespace twixt {
 	public:
 		Player();
 		Player(const std::string& name, Color color, BaseType baseType,uint8_t numOfPegsLeft = 50,uint8_t numOfLinksLeft = 50 , QColor qcolor = Qt::white);
+		Player(const Player& other);
 		~Player();
 		const std::string& getName() const;
 		uint8_t getNumOfPegsLeft() const;
@@ -42,6 +43,9 @@ namespace twixt {
 		bool pegCanBePlaced(Board& board, const Position& pos) const;
 		bool checkLinkOverlap(Board& board, const Position& pos1, const Position& pos2) const;
 		bool checkForWin(Board& board);
+
+		// = operator
+		Player& operator=(const Player& other);
 		
 		
 	

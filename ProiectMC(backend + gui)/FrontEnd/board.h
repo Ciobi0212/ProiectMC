@@ -28,7 +28,7 @@ namespace twixt {
 		
 
 	public:
-		static constexpr size_t BOARD_SIZE{ 8 };
+		static constexpr size_t BOARD_SIZE{ 12 };
 		
 	 private:
 		std::vector<std::vector<Cell>> m_board;

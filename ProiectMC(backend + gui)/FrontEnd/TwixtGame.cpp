@@ -5,23 +5,26 @@ using namespace twixt;
 TwixtGame::TwixtGame() {
 	firstPlayer = Player("Player1", Color::RED, BaseType::HORIZONTAL,50,50, Qt::red);
 	secondPlayer = Player("Player2", Color::BLUE, BaseType::VERTICAL,50,50, Qt::blue);
-	currentPlayer = &firstPlayer;
+	currentPlayer = firstPlayer.getColor();
 }
 
-TwixtGame::~TwixtGame() = default;
+TwixtGame::~TwixtGame() {
+}
 
-TwixtGame::TwixtGame(const TwixtGame& other)
+TwixtGame::TwixtGame(TwixtGame& other)
 {
 	board = other.board;
 	firstPlayer = other.firstPlayer;
 	secondPlayer = other.secondPlayer;
-	if (other.currentPlayer->getColor() == other.firstPlayer.getColor())
+
+	
+	if (other.currentPlayer == Color::RED)
 	{
-		currentPlayer = &firstPlayer;
+		currentPlayer = firstPlayer.getColor();
 	}
 	else
 	{
-		currentPlayer = &secondPlayer;
+		currentPlayer = secondPlayer.getColor();
 	}
 }
 
@@ -32,31 +35,39 @@ Board& TwixtGame::getBoard()
 
 void TwixtGame::switchPlayer()
 {
-	if (currentPlayer->getColor() == firstPlayer.getColor())
+	if (currentPlayer == firstPlayer.getColor())
 	{
-		currentPlayer = &secondPlayer;
+		currentPlayer = secondPlayer.getColor();
 	}
 	else
 	{
-		currentPlayer = &firstPlayer;
+		currentPlayer = firstPlayer.getColor();
 	}
 }
 
 
 Player& TwixtGame::getCurrentPlayer()
 {
-	return *currentPlayer;
+	if (currentPlayer == firstPlayer.getColor())
+	{
+		return firstPlayer;
+	}
+	else
+	{
+		return secondPlayer;
+	}
 }
 
 ActionSet TwixtGame::getValidActions()
 {
 	ActionSet validActions;
+	Player& currentPlayer = getCurrentPlayer();
 	for (int i = 0; i < board.getSize(); i++)
 	{
 		for (int j = 0; j < board.getSize(); j++)
 		{
 			Position pos1 = Position(i, j);
-			if (currentPlayer->pegCanBePlaced(board, pos1) && currentPlayer->getNumOfPegsLeft() > 0)
+			if (currentPlayer.pegCanBePlaced(board, pos1) && currentPlayer.getNumOfPegsLeft() > 0)
 			{
 				validActions.insert(std::make_tuple(ActionType::PLACE_PEG, pos1, pos1));
 			}
@@ -66,7 +77,7 @@ ActionSet TwixtGame::getValidActions()
 					{ i + 1, j - 2 }, { i + 1, j + 2 } };
 				for (Position pos2 : validPositions)
 				{
-					if (currentPlayer->linkCanBePlaced(board, pos1, pos2) && currentPlayer->getNumOfLinksLeft() > 0)
+					if (currentPlayer.linkCanBePlaced(board, pos1, pos2) && currentPlayer.getNumOfLinksLeft() > 0)
 					{
 						if (pos1 > pos2)
 							std::swap(pos1, pos2);
@@ -86,12 +97,13 @@ ActionSet TwixtGame::getValidActions()
 ActionSet TwixtGame::getValidPegActions()
 {
 	ActionSet validActions;
+	Player& currentPlayer = getCurrentPlayer();
 	for (int i = 0; i < board.getSize(); i++)
 	{
 		for (int j = 0; j < board.getSize(); j++)
 		{
 			Position pos1 = Position(i, j);
-			if (currentPlayer->pegCanBePlaced(board, pos1) && currentPlayer->getNumOfPegsLeft() > 0)
+			if (currentPlayer.pegCanBePlaced(board, pos1) && currentPlayer.getNumOfPegsLeft() > 0)
 			{
 				validActions.insert(std::make_tuple(ActionType::PLACE_PEG, pos1, pos1));
 			}
@@ -104,6 +116,7 @@ ActionSet TwixtGame::getValidPegActions()
 ActionSet TwixtGame::getValidLinkActions()
 {
 	ActionSet validActions;
+	Player& currentPlayer = getCurrentPlayer();
 	for (int i = 0; i < board.getSize(); i++)
 	{
 		for (int j = 0; j < board.getSize(); j++)
@@ -115,7 +128,7 @@ ActionSet TwixtGame::getValidLinkActions()
 					{ i + 1, j - 2 }, { i + 1, j + 2 } };
 				for (Position pos2 : validPositions)
 				{
-					if (currentPlayer->linkCanBePlaced(board, pos1, pos2))
+					if (currentPlayer.linkCanBePlaced(board, pos1, pos2))
 					{
 						if (pos1 > pos2)
 							std::swap(pos1, pos2);
@@ -140,17 +153,11 @@ bool TwixtGame::isDraw()
 	return firstPlayer.getNumOfPegsLeft() == 0 && secondPlayer.getNumOfPegsLeft() == 0;
 }
 
-int TwixtGame::gameResult()
-{
-	if (currentPlayer->checkForWin(board))
-		return 1;
-	else
-		return -1;
-}
+
 
 TwixtGame TwixtGame::getNextState(Action& action)
 {
-	TwixtGame nextState(*this);
+	TwixtGame nextState = *this;
 	Board& board = nextState.getBoard();
 	
 	ActionType actionType = std::get<0>(action);
