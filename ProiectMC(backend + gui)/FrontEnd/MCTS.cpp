@@ -2,14 +2,14 @@
 #include <fstream>
 //#include "MCTS.h"
 //
-MonteCarloTreeSearchNode::MonteCarloTreeSearchNode(TwixtGame state, MonteCarloTreeSearchNode* parent, Action parent_action)
+MonteCarloTreeSearchNode::MonteCarloTreeSearchNode(TwixtGame& state, MonteCarloTreeSearchNode* parent, Action parent_action)
 {
-	this->state = state;
 	this->parent = parent;
 	this->parent_action = parent_action;
 	this->wins = 0.0;
 	this->visits = 0;
-	this->untried_actions = state.getValidActions();
+	this->playerTurn = state.getCurrentPlayer().getColor();
+	this->untried_actions = state.getValidPegActions();
 }
 
 MonteCarloTreeSearchNode::~MonteCarloTreeSearchNode() = default;
@@ -121,9 +121,9 @@ MonteCarloTreeSearchNode::~MonteCarloTreeSearchNode() = default;
 //	return best_child(0.0)->parent_action;
 //}
 
-MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::select()
+MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::select(TwixtGame& state)
 {
-	double bestUcb = 0;
+	double bestUcb = -std::numeric_limits<double>::infinity();
 	std::vector<MonteCarloTreeSearchNode*> bestChildren;
 	for (const auto& child : children)
 	{
@@ -132,7 +132,7 @@ MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::select()
 			return child;
 		}
 		else {
-			double ucb = getUCBValue(child, sqrt(2));
+			double ucb = getUCBValue(child, sqrt(2.0));
 			if (ucb > bestUcb)
 			{
 				bestUcb = ucb;
@@ -144,33 +144,47 @@ MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::select()
 			}
 		}
 	}
+
 	
 	std::uniform_int_distribution<> distr(0, bestChildren.size() - 1);
 	int random_index = distr(eng);
+	state.goToNextState(bestChildren[random_index]->parent_action);
+	ActionSet nextLinkActions = state.getValidLinkActionsImproved(std::get<1>(bestChildren[random_index]->parent_action));
+	for (auto linkAction : nextLinkActions) {
+		state.goToNextState(linkAction);
+	}
+	state.switchPlayer();
 	return bestChildren[random_index];
 }
 
-MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::expand()
+MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::expand(TwixtGame& state)
 {
-	Action action = *untried_actions.begin();
-	untried_actions.erase(untried_actions.begin());
-	TwixtGame next_state = state.getNextState(action);
-	ActionSet nextLinkActions = next_state.getValidLinkActions();
+	//pick a random untried_action
+	std::uniform_int_distribution<> distr(0, untried_actions.size() - 1);
+	int random_index = distr(eng);
+	Action action = *std::next(untried_actions.begin(), random_index);
+	untried_actions.erase(action);
+	
+	
+	state.goToNextState(action);
+	if (std::get<1>(action) == Position(1, 9))
+		int a = 2;
+	ActionSet nextLinkActions = state.getValidLinkActionsImproved(std::get<1>(action));
 	for (auto linkAction : nextLinkActions) {
-		next_state = next_state.getNextState(linkAction);
+		 state.goToNextState(linkAction);
 	}
-	next_state.switchPlayer();
-	MonteCarloTreeSearchNode* child_node = new MonteCarloTreeSearchNode(next_state, this, action);
+	state.switchPlayer();
+	MonteCarloTreeSearchNode* child_node = new MonteCarloTreeSearchNode(state, this, action);
 	children.push_back(child_node);
 	return child_node;
 }
 
-double MonteCarloTreeSearchNode::rollout()
+double MonteCarloTreeSearchNode::rollout(TwixtGame& state)
 {
 	TwixtGame gameCopy(state);
 	Player player = gameCopy.getCurrentPlayer();
 	ActionSet nextPegMoves = gameCopy.getValidPegActions();
-	ActionSet nextLinkActions = gameCopy.getValidLinkActions();
+	ActionSet nextLinkActions = gameCopy.getValidLinkActionsImproved(std::get<1>(parent_action));
 	std::vector<Action> simulationMoves;
 
 	if (gameCopy.getCurrentPlayer().checkForWin(gameCopy.getBoard())) {
@@ -195,13 +209,15 @@ double MonteCarloTreeSearchNode::rollout()
 			std::advance(it, randomIndexPeg);
 			randomMove = *it;
 			simulationMoves.push_back(randomMove);
-			gameCopy = gameCopy.getNextState(randomMove);
+			 gameCopy.goToNextState(randomMove);
+			 if (std::get<1>(randomMove) == Position(1, 9))
+				 int a = 2;
 		}
-		nextLinkActions = gameCopy.getValidLinkActions();
+		nextLinkActions = gameCopy.getValidLinkActionsImproved(std::get<1>(randomMove));
 		if (!nextLinkActions.empty()) {
 			for (auto linkAction : nextLinkActions) {
 				simulationMoves.push_back(linkAction);
-				gameCopy = gameCopy.getNextState(linkAction);
+				 gameCopy.goToNextState(linkAction);
 			}
 		}
 
@@ -248,9 +264,10 @@ bool MonteCarloTreeSearchNode::is_terminal_node()
 	return untried_actions.empty() && children.size() > 0;
 }
 
-MCTS::MCTS(TwixtGame state)
+MCTS::MCTS(TwixtGame& state)
 {
 	this->root = new MonteCarloTreeSearchNode(state);
+	original_state = state;
 }
 
 MCTS::~MCTS()
@@ -273,20 +290,21 @@ Action MCTS::best_action(uint16_t simulations_number)
 {
 	for (uint16_t i = 0; i < simulations_number; i++) {
 		MonteCarloTreeSearchNode* node = root;
-
-
-		if (i == 498)
-			int a = 1;
+		TwixtGame state_copy = original_state;
+		if (i == 2000)
+			int a = 2;
 		while (node->is_terminal_node())
 		{
-			node = node->select();
+			node = node->select(state_copy);
 		}
-		node = node->expand();
-		double reward = node->rollout();
+		if (std::get<1>(node->parent_action) == Position(1, 9))
+			int a = 2;
+		node = node->expand(state_copy);
+		double reward = node->rollout(state_copy);
 		node->backpropagate(reward);
 	}
 	double bestUCB = 0;
-	double bestWinRate = -1000000;
+	double bestWinRate = -std::numeric_limits<double>::infinity();
 	MonteCarloTreeSearchNode* bestChild = nullptr;
 	std::ofstream file;
 	file.open("bestMove.txt");
@@ -301,19 +319,19 @@ Action MCTS::best_action(uint16_t simulations_number)
 		if (winRate > bestWinRate) {
 			bestWinRate = winRate;
 			bestChild = child;
-		}
-		file << std::endl;
-		Action bestMove = child->parent_action;
-		if (std::get<0>(bestMove) == ActionType::PLACE_PEG)
-			file << "PLACE_PEG" << std::endl;
-		else if (std::get<0>(bestMove) == ActionType::PLACE_LINK)
-			file << "PLACE_LINK" << std::endl;
+			file << std::endl;
+			Action bestMove = bestChild->parent_action;
+			if (std::get<0>(bestMove) == ActionType::PLACE_PEG)
+				file << "PLACE_PEG" << std::endl;
+			else if (std::get<0>(bestMove) == ActionType::PLACE_LINK)
+				file << "PLACE_LINK" << std::endl;
 
-		file << static_cast<int>(std::get<0>(bestMove)) << std::endl;
-		file << std::get<1>(bestMove).first << " " << std::get<1>(bestMove).second << std::endl;
-		file << std::get<2>(bestMove).first << " " << std::get<2>(bestMove).second << std::endl;
-		file << child->visits << std::endl;
-		file << child->wins << std::endl;
+			file << static_cast<int>(std::get<0>(bestMove)) << std::endl;
+			file << std::get<1>(bestMove).first << " " << std::get<1>(bestMove).second << std::endl;
+			file << std::get<2>(bestMove).first << " " << std::get<2>(bestMove).second << std::endl;
+			file << bestChild->visits << std::endl;
+			file << bestChild->wins << std::endl;
+		}
 	}
 	//write best move to fi
 	file << "BEST MOVE:" << std::endl;

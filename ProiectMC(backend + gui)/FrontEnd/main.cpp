@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
 	player.placeLinkOnBoard(board, Position(14, 2), Position(16, 3));
 	player.placeLinkOnBoard(board, Position(16, 3), Position(18, 2));
 	player.placeLinkOnBoard(board, Position(18, 2), Position(20, 3));
-	player.placeLinkOnBoard(board, Position(20, 3), Position(22, 2));
-	player.placePegOnBoard(board, Position(23, 2));*/
+	player.placeLinkOnBoard(board, Position(20, 3), Position(22, 2));*/
+	//player.placePegOnBoard(board, Position(23, 2));
 	
 	
 	
@@ -180,48 +180,54 @@ int main(int argc, char* argv[])
 	//game.getCurrentPlayer().placePegOnBoard(board, Position(2, 8));
 	////2 8 4 7
 	//game.getCurrentPlayer().placeLinkOnBoard(board, Position(2, 8), Position(4, 7));
-	//game.switchPlayer();
    //BEST OUTPUT: 1 9
 	
 
 //put 8 8
-game.getCurrentPlayer().placePegOnBoard(board, Position(8, 8));
-game.switchPlayer();
-//5 0
-game.getCurrentPlayer().placePegOnBoard(board, Position(5, 0));
-game.switchPlayer();
-//9 6
-game.getCurrentPlayer().placePegOnBoard(board, Position(9, 6));
-//9 6 8 8
-game.getCurrentPlayer().placeLinkOnBoard(board, Position(9, 6), Position(8, 8));
-game.switchPlayer();
-//5 4
-game.getCurrentPlayer().placePegOnBoard(board, Position(5, 4));
-game.switchPlayer();
-//3 8
-game.getCurrentPlayer().placePegOnBoard(board, Position(3, 8));
-game.switchPlayer();
-// 4 2
-game.getCurrentPlayer().placePegOnBoard(board, Position(4, 2));
-//4 2 5 4
-game.getCurrentPlayer().placeLinkOnBoard(board, Position(4, 2), Position(5, 4));
-//4 2 5 0
-game.getCurrentPlayer().placeLinkOnBoard(board, Position(4, 2), Position(5, 0));
-game.switchPlayer();
-//9 5 
-game.getCurrentPlayer().placePegOnBoard(board, Position(9, 5));
-game.switchPlayer();
-//4 6
-game.getCurrentPlayer().placePegOnBoard(board, Position(4, 6));
-//4 6 5 4 
-game.getCurrentPlayer().placeLinkOnBoard(board, Position(4, 6), Position(5, 4));
-game.switchPlayer();
+//game.getCurrentPlayer().placePegOnBoard(board, Position(8, 8));
+//game.switchPlayer();
+////5 0
+//game.getCurrentPlayer().placePegOnBoard(board, Position(5, 0));
+//game.switchPlayer();
+////9 6
+//game.getCurrentPlayer().placePegOnBoard(board, Position(9, 6));
+////9 6 8 8
+//game.getCurrentPlayer().placeLinkOnBoard(board, Position(9, 6), Position(8, 8));
+//game.switchPlayer();
+////5 4
+//game.getCurrentPlayer().placePegOnBoard(board, Position(5, 4));
+//game.switchPlayer();
+////3 8
+//game.getCurrentPlayer().placePegOnBoard(board, Position(3, 8));
+//game.switchPlayer();
+//// 4 2
+//game.getCurrentPlayer().placePegOnBoard(board, Position(4, 2));
+////4 2 5 4
+//game.getCurrentPlayer().placeLinkOnBoard(board, Position(4, 2), Position(5, 4));
+////4 2 5 0
+//game.getCurrentPlayer().placeLinkOnBoard(board, Position(4, 2), Position(5, 0));
+//game.switchPlayer();
+////9 5 
+//game.getCurrentPlayer().placePegOnBoard(board, Position(9, 5));
+//game.switchPlayer();
+////4 6
+//game.getCurrentPlayer().placePegOnBoard(board, Position(4, 6));
+////4 6 5 4 
+//game.getCurrentPlayer().placeLinkOnBoard(board, Position(4, 6), Position(5, 4));
+//game.switchPlayer();
 
+
+
+game.getCurrentPlayer().placePegOnBoard(board, Position(6, 6));
+game.switchPlayer();
+// 2 6
+game.getCurrentPlayer().placePegOnBoard(board, Position(2, 6));
+game.switchPlayer();
 
 	MCTS mcts(game);
 	//PMT pm;
     //pm.getBestAction(game, 2000);
-	Action action = mcts.best_action(5000);
+	Action action = mcts.best_action(100000);
 	
 
 	//(0,3), (2,2), (5,3)

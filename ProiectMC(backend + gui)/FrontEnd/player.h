@@ -42,6 +42,7 @@ namespace twixt {
 		bool linkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const;
 		bool pegCanBePlaced(Board& board, const Position& pos) const;
 		bool checkLinkOverlap(Board& board, const Position& pos1, const Position& pos2) const;
+		bool checkLinkOverlapImproved(Board& board, const Position& pos1, const Position& pos2) const;
 		bool checkForWin(Board& board);
 
 		// = operator

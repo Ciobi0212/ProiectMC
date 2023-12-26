@@ -3,18 +3,18 @@
 #include <random>
 class MonteCarloTreeSearchNode {
 public:
-	MonteCarloTreeSearchNode(TwixtGame state, MonteCarloTreeSearchNode* parent = nullptr, Action parent_action = Action(ActionType::NONE, { -1,-1 }, { -1, -1 }));
+	MonteCarloTreeSearchNode(TwixtGame& state, MonteCarloTreeSearchNode* parent = nullptr, Action parent_action = Action(ActionType::NONE, { -1,-1 }, { -1, -1 }));
 	~MonteCarloTreeSearchNode();
-	MonteCarloTreeSearchNode* select();
-	MonteCarloTreeSearchNode* expand();
-	double rollout();
+	MonteCarloTreeSearchNode* select(TwixtGame& state);
+	MonteCarloTreeSearchNode* expand(TwixtGame& state);
+	double rollout(TwixtGame& state);
 	void backpropagate(double result);
 	double getUCBValue(MonteCarloTreeSearchNode* node, double exploration_parameter = 1.414);
 	bool is_terminal_node();
 	
 
-	TwixtGame state;
 	MonteCarloTreeSearchNode* parent;
+	Color playerTurn;
 	Action parent_action;
 	std::vector<MonteCarloTreeSearchNode*> children;
 	ActionSet untried_actions;
@@ -26,11 +26,12 @@ public:
 
 class MCTS {
 public:
-	MCTS(TwixtGame state);
+	MCTS(TwixtGame& state);
 	~MCTS();
 	void dealocateTree(MonteCarloTreeSearchNode* node);
 	Action best_action(uint16_t simulations_number);
 //private:
 	MonteCarloTreeSearchNode* root;
+	TwixtGame original_state;
 };
 

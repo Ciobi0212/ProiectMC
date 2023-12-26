@@ -143,6 +143,31 @@ ActionSet TwixtGame::getValidLinkActions()
 	return validActions;
 }
 
+ActionSet TwixtGame::getValidLinkActionsImproved(Position positionOfLastPegPlaced)
+{
+	Player& currentPlayer = getCurrentPlayer();
+	ActionSet validActions;
+	auto [i, j] = positionOfLastPegPlaced;
+	std::vector<Position> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
+				{ i + 2, j + 1 }, { i - 1, j - 2 }, { i - 1, j + 2 },
+				{ i + 1, j - 2 }, { i + 1, j + 2 } };
+
+	for (Peg peg : currentPlayer.getPegs()) {
+		Position posOfPeg = peg.getPosition();
+		for (Position pos2 : validPositions)
+		{
+			if (posOfPeg == pos2 && currentPlayer.linkCanBePlaced(board, posOfPeg, positionOfLastPegPlaced))
+			{
+				if (posOfPeg > positionOfLastPegPlaced)
+					validActions.insert(std::make_tuple(ActionType::PLACE_LINK, positionOfLastPegPlaced, posOfPeg));
+				else
+				validActions.insert(std::make_tuple(ActionType::PLACE_LINK, posOfPeg, positionOfLastPegPlaced));
+			}
+		}
+	}
+	return validActions;
+}
+
 bool TwixtGame::isGameOver()
 {
 	return firstPlayer.checkForWin(board) || secondPlayer.checkForWin(board);
@@ -173,6 +198,23 @@ TwixtGame TwixtGame::getNextState(Action& action)
 		nextState.getCurrentPlayer().placeLinkOnBoard(board, pos1, pos2);
 	}
 	return nextState;
+}
+
+void TwixtGame::goToNextState(Action& action)
+{
+	ActionType actionType = std::get<0>(action);
+	Board& board = getBoard();
+	if (actionType == ActionType::PLACE_PEG)
+	{
+		Position pos1 = std::get<1>(action);
+		getCurrentPlayer().placePegOnBoard(board, pos1);
+	}
+	else if (actionType == ActionType::PLACE_LINK)
+	{
+		Position pos1 = std::get<1>(action);
+		Position pos2 = std::get<2>(action);
+		getCurrentPlayer().placeLinkOnBoard(board, pos1, pos2);
+	}
 }
 
 std::pair<double, bool> TwixtGame::getValueAndCheckForWin(TwixtGame& state)

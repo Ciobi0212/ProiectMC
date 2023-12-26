@@ -109,7 +109,10 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 		return false;
 	}
 	
-	if (checkLinkOverlap(board, pos1, pos2)) {
+	/*if (checkLinkOverlap(board, pos1, pos2) != checkLinkOverlapImproved(board, pos1, pos2))
+		int a = 2;*/
+	
+	if (checkLinkOverlapImproved(board, pos1, pos2)) {
 		return false;
 	}
 	//check if linkk is already placed
@@ -119,14 +122,9 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 		}
 	}
 	
-	std::vector<Position> validPositions{ { x - 2, y - 1 }, { x - 2, y + 1 }, { x + 2, y - 1 }, { x + 2, y + 1 }, { x - 1, y - 2 }, { x - 1, y + 2 }, { x + 1, y - 2 }, { x + 1, y + 2 } };
-
-	for (Position& position : validPositions) {
-		if (pos1 == position)
-			return true;
-		}
 	
-	return false;
+	
+	return true;
 }
 
 bool twixt::Player::pegCanBePlaced(Board& board, const Position& pos) const
@@ -184,6 +182,188 @@ bool twixt::Player::checkLinkOverlap(Board& board, const Position& pos1, const P
 				}
 			}
 		}
+	return false;
+}
+
+bool twixt::Player::checkLinkOverlapImproved(Board& board, const Position& posOne, const Position& posTwo) const
+{
+	Position pos1 = posOne ,pos2 = posTwo ,pos3, pos4, pos5, pos6;
+	if (pos1.second > pos2.second)
+	{
+		Position aux = pos1;
+		pos1 = pos2;
+		pos2 = aux;
+	}
+
+	//vertical to the left
+	if (pos2.second - pos1.second == 1 && pos2.first - pos1.first == 2)
+	{
+		pos3 = { pos1.first , pos1.second + 1 };
+		pos4 = { pos1.first + 1, pos1.second };
+		pos5 = { pos1.first + 1, pos1.second + 1 };
+		pos6 = { pos1.first + 2, pos1.second };
+	}
+
+	//vertical to the right 
+	else if (pos2.second - pos1.second == 1 && pos1.first - pos2.first == 2)
+	{
+		pos3 = { pos1.first , pos1.second + 1 };
+		pos4 = { pos1.first - 1, pos1.second };
+		pos5 = { pos1.first - 1, pos1.second + 1 };
+		pos6 = { pos1.first - 2, pos1.second };
+	}
+
+	//horizontal to the top
+	else if (pos1.first - pos2.first == 1 && pos2.second - pos1.second == 2)
+	{
+		pos3 = { pos1.first , pos1.second + 1 };
+		pos4 = { pos1.first, pos1.second + 2 };
+		pos5 = { pos1.first - 1, pos1.second };
+		pos6 = { pos1.first - 1, pos1.second + 1 };
+	}
+
+	//horozintal the the bottom
+	else if (pos2.first - pos1.first == 1 && pos2.second - pos1.second == 2)
+	{
+		pos3 = { pos1.first , pos1.second + 1 };
+		pos4 = { pos1.first, pos1.second + 2 };
+		pos5 = { pos1.first + 1, pos1.second };
+		pos6 = { pos1.first + 1, pos1.second + 1 };
+	}
+
+	if (board.isInBounds(pos3) && board[pos3].hasLinks()) {
+		std::unordered_set <Link*> links = board[pos3].getLinks();
+		for (Link* link : links)
+		{
+			auto [x1, y1] = pos1;
+			auto [x2, y2] = pos2;
+			auto [x3, y3] = link->getP1().getPosition();
+			auto [x4, y4] = link->getP2().getPosition();
+
+			if ((x1 == x3 && y1 == y3 && link->getP1().getColor() == m_color) ||
+				(x1 == x4 && y1 == y4 && link->getP2().getColor() == m_color) ||
+				(x2 == x3 && y2 == y3 && link->getP1().getColor() == m_color) ||
+				(x2 == x4 && y2 == y4 && link->getP2().getColor() == m_color))
+				continue;
+
+			else {
+				auto orientation = [](const Position& p1, const Position& p2, const Position& p3) {
+					int val = (p2.second - p1.second) * (p3.first - p2.first) -
+						(p2.first - p1.first) * (p3.second - p2.second);
+					if (val == 0) return 0;  // colinear 
+					return (val > 0) ? 1 : 2; // clock or counterclock wise 
+					};
+
+				int o1 = orientation({ x1, y1 }, { x2, y2 }, { x3, y3 });
+				int o2 = orientation({ x1, y1 }, { x2, y2 }, { x4, y4 });
+				int o3 = orientation({ x3, y3 }, { x4, y4 }, { x1, y1 });
+				int o4 = orientation({ x3, y3 }, { x4, y4 }, { x2, y2 });
+				if (o1 != o2 && o3 != o4)
+					return true;
+			}
+		}
+	}
+
+	if (board.isInBounds(pos4) && board[pos4].hasLinks()) {
+		std::unordered_set <Link*> links = board[pos4].getLinks();
+		for (Link* link : links)
+		{
+			auto [x1, y1] = pos1;
+			auto [x2, y2] = pos2;
+			auto [x3, y3] = link->getP1().getPosition();
+			auto [x4, y4] = link->getP2().getPosition();
+
+			if ((x1 == x3 && y1 == y3 && link->getP1().getColor() == m_color) ||
+				(x1 == x4 && y1 == y4 && link->getP2().getColor() == m_color) ||
+				(x2 == x3 && y2 == y3 && link->getP1().getColor() == m_color) ||
+				(x2 == x4 && y2 == y4 && link->getP2().getColor() == m_color))
+				continue;
+
+			else {
+				auto orientation = [](const Position& p1, const Position& p2, const Position& p3) {
+					int val = (p2.second - p1.second) * (p3.first - p2.first) -
+						(p2.first - p1.first) * (p3.second - p2.second);
+					if (val == 0) return 0;  // colinear 
+					return (val > 0) ? 1 : 2; // clock or counterclock wise 
+					};
+
+				int o1 = orientation({ x1, y1 }, { x2, y2 }, { x3, y3 });
+				int o2 = orientation({ x1, y1 }, { x2, y2 }, { x4, y4 });
+				int o3 = orientation({ x3, y3 }, { x4, y4 }, { x1, y1 });
+				int o4 = orientation({ x3, y3 }, { x4, y4 }, { x2, y2 });
+				if (o1 != o2 && o3 != o4)
+					return true;
+			}
+		}
+	}
+
+	if (board.isInBounds(pos5) && board[pos5].hasLinks()) {
+		std::unordered_set <Link*> links = board[pos5].getLinks();
+		for (Link* link : links)
+		{
+			auto [x1, y1] = pos1;
+			auto [x2, y2] = pos2;
+			auto [x3, y3] = link->getP1().getPosition();
+			auto [x4, y4] = link->getP2().getPosition();
+
+			if ((x1 == x3 && y1 == y3 && link->getP1().getColor() == m_color) ||
+				(x1 == x4 && y1 == y4 && link->getP2().getColor() == m_color) ||
+				(x2 == x3 && y2 == y3 && link->getP1().getColor() == m_color) ||
+				(x2 == x4 && y2 == y4 && link->getP2().getColor() == m_color))
+				continue;
+
+			else {
+				auto orientation = [](const Position& p1, const Position& p2, const Position& p3) {
+					int val = (p2.second - p1.second) * (p3.first - p2.first) -
+						(p2.first - p1.first) * (p3.second - p2.second);
+					if (val == 0) return 0;  // colinear 
+					return (val > 0) ? 1 : 2; // clock or counterclock wise 
+					};
+
+				int o1 = orientation({ x1, y1 }, { x2, y2 }, { x3, y3 });
+				int o2 = orientation({ x1, y1 }, { x2, y2 }, { x4, y4 });
+				int o3 = orientation({ x3, y3 }, { x4, y4 }, { x1, y1 });
+				int o4 = orientation({ x3, y3 }, { x4, y4 }, { x2, y2 });
+				if (o1 != o2 && o3 != o4)
+					return true;
+			}
+		}
+	}
+
+	if (board.isInBounds(pos6) && board[pos6].hasLinks()) {
+		std::unordered_set <Link*> links = board[pos6].getLinks();
+		for (Link* link : links)
+		{
+			auto [x1, y1] = pos1;
+			auto [x2, y2] = pos2;
+			auto [x3, y3] = link->getP1().getPosition();
+			auto [x4, y4] = link->getP2().getPosition();
+
+			if ((x1 == x3 && y1 == y3 && link->getP1().getColor() == m_color) ||
+				(x1 == x4 && y1 == y4 && link->getP2().getColor() == m_color) ||
+				(x2 == x3 && y2 == y3 && link->getP1().getColor() == m_color) ||
+				(x2 == x4 && y2 == y4 && link->getP2().getColor() == m_color))
+				continue;
+
+			else {
+				auto orientation = [](const Position& p1, const Position& p2, const Position& p3) {
+					int val = (p2.second - p1.second) * (p3.first - p2.first) -
+						(p2.first - p1.first) * (p3.second - p2.second);
+					if (val == 0) return 0;  // colinear 
+					return (val > 0) ? 1 : 2; // clock or counterclock wise 
+					};
+
+				int o1 = orientation({ x1, y1 }, { x2, y2 }, { x3, y3 });
+				int o2 = orientation({ x1, y1 }, { x2, y2 }, { x4, y4 });
+				int o3 = orientation({ x3, y3 }, { x4, y4 }, { x1, y1 });
+				int o4 = orientation({ x3, y3 }, { x4, y4 }, { x2, y2 });
+				if (o1 != o2 && o3 != o4)
+					return true;
+			}
+		}
+	}
+
+
 	return false;
 }
 
