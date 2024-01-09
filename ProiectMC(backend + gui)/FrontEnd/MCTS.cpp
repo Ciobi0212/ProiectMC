@@ -184,7 +184,7 @@ double MonteCarloTreeSearchNode::rollout(TwixtGame& state)
 	TwixtGame gameCopy(state);
 	Player player = gameCopy.getCurrentPlayer();
 	ActionSet nextPegMoves = gameCopy.getValidPegActions();
-	ActionSet nextLinkActions = gameCopy.getValidLinkActionsImproved(std::get<1>(parent_action));
+	ActionSet nextLinkActions = gameCopy.getValidLinkActions();
 	std::vector<Action> simulationMoves;
 
 	if (gameCopy.getCurrentPlayer().checkForWin(gameCopy.getBoard())) {

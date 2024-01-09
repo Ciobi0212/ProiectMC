@@ -160,11 +160,10 @@ ActionSet TwixtGame::getValidLinkActionsImproved(Position positionOfLastPegPlace
 				{ i + 2, j + 1 }, { i - 1, j - 2 }, { i - 1, j + 2 },
 				{ i + 1, j - 2 }, { i + 1, j + 2 } };
 
-	for (Peg peg : currentPlayer.getPegs()) {
-		Position posOfPeg = peg.getPosition();
-		for (Position pos2 : validPositions)
+	
+		for (Position posOfPeg : validPositions)
 		{
-			if (posOfPeg == pos2 && currentPlayer.linkCanBePlaced(board, posOfPeg, positionOfLastPegPlaced))
+			if (currentPlayer.linkCanBePlaced(board, posOfPeg, positionOfLastPegPlaced))
 			{
 				if (posOfPeg > positionOfLastPegPlaced)
 					validActions.insert(std::make_tuple(ActionType::PLACE_LINK, positionOfLastPegPlaced, posOfPeg));
@@ -172,7 +171,7 @@ ActionSet TwixtGame::getValidLinkActionsImproved(Position positionOfLastPegPlace
 				validActions.insert(std::make_tuple(ActionType::PLACE_LINK, posOfPeg, positionOfLastPegPlaced));
 			}
 		}
-	}
+	
 	return validActions;
 }
 

@@ -15,7 +15,7 @@ BoardWidget::BoardWidget(TwixtGame& game, QWidget* parent)
 		}
 	}
 
-
+	recommandedAction = Action{ ActionType::NONE, Position{0,0}, Position{0,0} };
 }
 
 BoardWidget::~BoardWidget()
@@ -42,6 +42,7 @@ void BoardWidget::drawBoard(QPainter& painter)
 	}
 
 	drawBaseDelimitators(painter);
+	drawRecommandation(painter);
 }
 
 void BoardWidget::drawBaseDelimitators(QPainter& painter)
@@ -194,6 +195,22 @@ void BoardWidget::paintEvent(QPaintEvent* event)
 	drawBoard(painter);
 }
 
+void BoardWidget::drawRecommandation(QPainter& painter)
+{
+	if (std::get<0>(recommandedAction) != ActionType::NONE) {
+		Board& board = game.getBoard();
+		Cell& firstCell = board[std::get<1>(recommandedAction)];
+		Cell& secondCell = board[std::get<2>(recommandedAction)];
+		size_t centerX = firstCell.getPositionOnScreen().x();
+		size_t centerY = firstCell.getPositionOnScreen().y();
+		painter.setBrush(QBrush(Qt::cyan, Qt::SolidPattern));
+		painter.drawEllipse(centerX, centerY, radius * 2, radius * 2);
+		
+	}
+	
+	recommandedAction = { ActionType::NONE, {0,0}, {0,0} };
+}
+
 void BoardWidget::mousePressEvent(QMouseEvent* event)
 {
 	Board& board = game.getBoard();
@@ -235,4 +252,9 @@ void BoardWidget::winMessage(const Player& player)
 		msgBox.setText("Blue player won!");
 
 	msgBox.exec();
+}
+
+void BoardWidget::setRecommendedAction(Action action)
+{
+	recommandedAction = action;
 }

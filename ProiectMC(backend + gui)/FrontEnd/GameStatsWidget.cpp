@@ -42,5 +42,7 @@ void GameStatsWidget::on_pushButtonEndTurn_clicked()
 
 void GameStatsWidget::on_pushButtonMCTS_clicked() {
 	MCTS mcts(game);
-	mcts.best_action(10000);
+	boardWidget.setRecommendedAction(mcts.best_action(50000));
+	boardWidget.repaint();
+	//game.getValidLinkActions();
 }

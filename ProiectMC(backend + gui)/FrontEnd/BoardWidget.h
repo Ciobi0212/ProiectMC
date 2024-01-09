@@ -28,6 +28,7 @@ public:
 	void drawPeg(QPainter& painter, Peg& peg);
 	void drawLinksOfCell(QPainter& painter, const Cell& cell);
 	void paintEvent(QPaintEvent* event) override;
+	void drawRecommandation(QPainter& painter);
 
 	//Helper functions
 	bool isCornerCell(size_t row, size_t col, size_t boardSize);
@@ -42,9 +43,13 @@ public:
 	//Message functions
 	void winMessage(const Player& player);
 
+	//
+	void setRecommendedAction(Action action);
+
 private:
 	Ui::BoardWidgetClass ui;
 	TwixtGame& game;
 	size_t boardSize;
 	size_t cellSize;
+	Action recommandedAction;
 };
