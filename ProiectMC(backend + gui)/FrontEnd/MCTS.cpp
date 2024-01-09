@@ -197,7 +197,7 @@ double MonteCarloTreeSearchNode::rollout(TwixtGame& state)
 	}
 
 
-	while (!nextPegMoves.empty() || !nextLinkActions.empty()) {
+	while (true) {
 		Action randomMove;
 		nextPegMoves = gameCopy.getValidPegActions();
 

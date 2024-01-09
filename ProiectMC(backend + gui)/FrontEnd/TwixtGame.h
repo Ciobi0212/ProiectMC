@@ -49,11 +49,14 @@ public:
 	ActionSet getValidPegActions();
 	ActionSet getValidLinkActions();
 	ActionSet getValidLinkActionsImproved(Position positionOfLastPegPlaced);
+	
 	bool isGameOver();
 	bool isDraw();
-	TwixtGame getNextState(Action& action);
+	
+	//TwixtGame getNextState(Action& action);
+	
 	void goToNextState(Action& action);
-	std::pair<double,bool> getValueAndCheckForWin(TwixtGame& state);
+	//std::pair<double,bool> getValueAndCheckForWin(TwixtGame& state);
 	Player& getOpponent(Player& currentPlayer);
 	double getOpponnentValue(double value);
 	
@@ -63,6 +66,5 @@ private:
 	Player firstPlayer;
 	Player secondPlayer;
 	Color currentPlayer;
-
 };
 

@@ -10,8 +10,8 @@ FrontEnd::FrontEnd(TwixtGame& game, QWidget* parent)
 	boardWidget = new BoardWidget(game, this);
 	boardWidget->move((widthRes - boardWidget->width()) / 2, (heightRes - boardWidget->height()) / 2);
 
-	/*gameStatsWidget = new GameStatsWidget(game, this);
-	gameStatsWidget->move(0, 0);*/
+	gameStatsWidget = new GameStatsWidget(game, *boardWidget, this);
+	gameStatsWidget->move(0, 0);
 }
 
 FrontEnd::~FrontEnd()

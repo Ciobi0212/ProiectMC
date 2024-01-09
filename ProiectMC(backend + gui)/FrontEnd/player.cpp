@@ -5,7 +5,10 @@ using namespace twixt;
 
 Player::Player() = default;
 
-Player::Player(const std::string& name, Color color, BaseType baseType, uint8_t numOfPegsLeft, uint8_t numOfLinksLeft, QColor qcolor) : m_name{ name }, m_color{ color }, m_baseType{ baseType }, m_qcolor{ qcolor }, m_numOfPegsLeft{ numOfPegsLeft }, m_numOfLinksLeft{numOfLinksLeft} {}
+Player::Player(const std::string& name, Color color, BaseType baseType,
+	uint8_t numOfPegsLeft, uint8_t numOfLinksLeft, QColor qcolor, bool placedPeg, Peg* selectedPeg) :
+	m_name{ name }, m_color{ color }, m_baseType{ baseType }, m_qcolor{ qcolor }, 
+	m_numOfPegsLeft{ numOfPegsLeft }, m_numOfLinksLeft{ numOfLinksLeft }, m_placedPeg{ placedPeg }, m_selectedPeg{selectedPeg} {}
 
 twixt::Player::Player(const Player& other)
 {
@@ -17,6 +20,8 @@ twixt::Player::Player(const Player& other)
 	m_numOfLinksLeft = other.m_numOfLinksLeft;
 	m_pegs = other.m_pegs;
 	m_links = other.m_links;
+	m_placedPeg = other.m_placedPeg;
+	m_selectedPeg = other.m_selectedPeg;
 }
 
 Player::~Player() = default;
@@ -44,6 +49,11 @@ QColor twixt::Player::getQColor() const
 	return m_qcolor;
 }
 
+Peg* twixt::Player::getSelectedPeg() const
+{
+	return m_selectedPeg;
+}
+
 void Player::setName(const std::string& name) {
 	this->m_name = name;
 }
@@ -65,6 +75,16 @@ void twixt::Player::setNumOfPegsLeft(uint8_t numOfPegsLeft)
 void twixt::Player::setNumOfLinksLeft(uint8_t numOfLinksLeft)
 {
 	m_numOfLinksLeft = numOfLinksLeft;
+}
+
+void twixt::Player::setPlacedPeg(bool status)
+{
+	m_placedPeg = status;
+}
+
+void twixt::Player::setSelectedPeg(Peg* selectedPeg)
+{
+	m_selectedPeg = selectedPeg;
 }
 
 std::vector<std::reference_wrapper<Peg>> Player::getPegs() const {
@@ -107,10 +127,7 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 	
 	if (board[pos1].getPeg().getColor() != m_color || board[pos2].getPeg().getColor() != m_color) {
 		return false;
-	}
-	
-	/*if (checkLinkOverlap(board, pos1, pos2) != checkLinkOverlapImproved(board, pos1, pos2))
-		int a = 2;*/
+	} 
 	
 	if (checkLinkOverlapImproved(board, pos1, pos2)) {
 		return false;
@@ -121,10 +138,17 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 			return false;
 		}
 	}
+
+	std::vector<Position> validPositions{ { x - 2, y - 1 }, { x - 2, y + 1 }, { x + 2, y - 1 },
+										  { x + 2, y + 1 }, { x - 1, y - 2 }, { x - 1, y + 2 },
+										  { x + 1, y - 2 }, { x + 1, y + 2 } };
+
+	for (auto& pos : validPositions) {
+		if (pos1 == pos)
+			return true;
+	}
 	
-	
-	
-	return true;
+		return false;
 }
 
 bool twixt::Player::pegCanBePlaced(Board& board, const Position& pos) const
@@ -450,6 +474,9 @@ void twixt::Player::removeLinkFromBoard(Board& board, Link* linkToRemove)
 
 void twixt::Player::placePegOnBoard(Board& board, const Position& pos)
 {
+	if (m_placedPeg) // Player already placed a peg in this turn
+		return;
+	
 	Cell& curentCell = board[pos];
 	
 	auto& [x, y] = pos;
@@ -458,6 +485,7 @@ void twixt::Player::placePegOnBoard(Board& board, const Position& pos)
 	curentCell.setColor(m_color);
 	this->addPeg(*pegToAdd);
 	this->m_numOfPegsLeft--;
+	m_placedPeg = true;
 
 	/*std::vector<Position> validPositions{ { x - 2, y - 1 }, { x - 2, y + 1 }, { x + 2, y - 1 }, { x + 2, y + 1 }, { x - 1, y - 2 }, { x - 1, y + 2 }, { x + 1, y - 2 }, { x + 1, y + 2 } };
 	for (Position& pos : validPositions) {

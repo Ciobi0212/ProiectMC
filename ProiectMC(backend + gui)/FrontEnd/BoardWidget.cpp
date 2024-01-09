@@ -1,6 +1,6 @@
 #include "BoardWidget.h"
 
-BoardWidget::BoardWidget(TwixtGame& game ,QWidget* parent)
+BoardWidget::BoardWidget(TwixtGame& game, QWidget* parent)
 	: QWidget{ parent }, game{ game }
 {
 	ui.setupUi(this);
@@ -78,7 +78,13 @@ void BoardWidget::drawEmptyCell(QPainter& painter, const Cell& cell)
 
 void BoardWidget::drawPeg(QPainter& painter, Peg& peg)
 {
-	painter.setBrush(QBrush(peg.getQColor(), Qt::SolidPattern));
+	if ( &peg == game.getCurrentPlayer().getSelectedPeg()) {
+		painter.setBrush(QBrush(Qt::green, Qt::SolidPattern));
+	}
+	else {
+		painter.setBrush(QBrush(peg.getQColor(), Qt::SolidPattern));
+	}
+
 	size_t centerX = peg.getPositionOnScreen().x();
 	size_t centerY = peg.getPositionOnScreen().y();
 	painter.drawEllipse(centerX, centerY, radius * 2, radius * 2);
@@ -141,24 +147,35 @@ bool BoardWidget::isClickOnLink(QPoint click, Link* link)
 }
 void BoardWidget::handleCellClick(const Position& pos, Player& currentPlayer, Board& board)
 {
-	if (board[pos].hasPeg()) {
-		if (board[pos].getPeg().getColor() == currentPlayer.getColor()) {
-		}
-	}
-
-	else {
+	if (!board[pos].hasPeg()) { // cell is empty                             
 		if (currentPlayer.pegCanBePlaced(board, pos)) {
 			currentPlayer.placePegOnBoard(board, pos);
 			repaint();
-			if (currentPlayer.checkForWin(board)) {
-				winMessage(currentPlayer);
-				exit(0);
-			}
-			game.switchPlayer();
 		}
 	}
 
+	else if (board[pos].getPeg().getColor() == currentPlayer.getColor()) { // current player clicked on one of his pegs
+		if (currentPlayer.getSelectedPeg() == nullptr) {
+			currentPlayer.setSelectedPeg(&board[pos].getPeg());
+			repaint();
+		}
+		else if (currentPlayer.getSelectedPeg() != &board[pos].getPeg()) {
+			Position posPeg1 = currentPlayer.getSelectedPeg()->getPosition();
+			Position posPeg2 = board[pos].getPeg().getPosition();
+			if (currentPlayer.linkCanBePlaced(board, posPeg1, posPeg2)) {
+				currentPlayer.placeLinkOnBoard(board, posPeg1, posPeg2);
+				if (currentPlayer.checkForWin(board)) {
+					winMessage(currentPlayer);
+					exit(0);
+				}
+			}
+			currentPlayer.setSelectedPeg(nullptr);
+			repaint();
+		}
+	}
 }
+
+
 void BoardWidget::handleLinkClick(Link* link, Player& currentPlayer, Board& board)
 {
 	if (currentPlayer.getColor() == link->getColor()) {

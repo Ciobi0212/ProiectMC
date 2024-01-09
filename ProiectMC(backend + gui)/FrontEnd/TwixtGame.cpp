@@ -37,10 +37,14 @@ void TwixtGame::switchPlayer()
 {
 	if (currentPlayer == firstPlayer.getColor())
 	{
+		firstPlayer.setPlacedPeg(false);
+		firstPlayer.setSelectedPeg(nullptr);
 		currentPlayer = secondPlayer.getColor();
 	}
 	else
 	{
+		secondPlayer.setPlacedPeg(false);
+		secondPlayer.setSelectedPeg(nullptr);
 		currentPlayer = firstPlayer.getColor();
 	}
 }
@@ -98,12 +102,16 @@ ActionSet TwixtGame::getValidPegActions()
 {
 	ActionSet validActions;
 	Player& currentPlayer = getCurrentPlayer();
+	if (currentPlayer.getNumOfPegsLeft() == 0)
+		return validActions;
+	
+
 	for (int i = 0; i < board.getSize(); i++)
 	{
 		for (int j = 0; j < board.getSize(); j++)
 		{
 			Position pos1 = Position(i, j);
-			if (currentPlayer.pegCanBePlaced(board, pos1) && currentPlayer.getNumOfPegsLeft() > 0)
+			if (currentPlayer.pegCanBePlaced(board, pos1))
 			{
 				validActions.insert(std::make_tuple(ActionType::PLACE_PEG, pos1, pos1));
 			}
@@ -178,28 +186,6 @@ bool TwixtGame::isDraw()
 	return firstPlayer.getNumOfPegsLeft() == 0 && secondPlayer.getNumOfPegsLeft() == 0;
 }
 
-
-
-TwixtGame TwixtGame::getNextState(Action& action)
-{
-	TwixtGame nextState = *this;
-	Board& board = nextState.getBoard();
-	
-	ActionType actionType = std::get<0>(action);
-	if (actionType == ActionType::PLACE_PEG)
-	{
-		Position pos1 = std::get<1>(action);
-		nextState.getCurrentPlayer().placePegOnBoard(board, pos1);
-	}
-	else if (actionType == ActionType::PLACE_LINK)
-	{
-		Position pos1 = std::get<1>(action);
-		Position pos2 = std::get<2>(action);
-		nextState.getCurrentPlayer().placeLinkOnBoard(board, pos1, pos2);
-	}
-	return nextState;
-}
-
 void TwixtGame::goToNextState(Action& action)
 {
 	ActionType actionType = std::get<0>(action);
@@ -217,34 +203,6 @@ void TwixtGame::goToNextState(Action& action)
 	}
 }
 
-std::pair<double, bool> TwixtGame::getValueAndCheckForWin(TwixtGame& state)
-{
-	Player& currentPlayer = state.getCurrentPlayer();
-	if (currentPlayer.checkForWin(state.getBoard()))
-		return { 1.0, true };
-
-	//if (firstPlayer.getNumOfPegsLeft() == 0 && secondPlayer.getNumOfPegsLeft() == 0)
-	//	return { 0.5, true };
-
-	return { 0, false };
-}
-
-Player& TwixtGame::getOpponent(Player& currentPlayer)
-{
-	if (currentPlayer.getColor() == firstPlayer.getColor())
-	{
-		return secondPlayer;
-	}
-	else
-	{
-		return firstPlayer;
-	}
-}
-
-double TwixtGame::getOpponnentValue(double value)
-{
-	return value * -1.0;
-}
 
 
 

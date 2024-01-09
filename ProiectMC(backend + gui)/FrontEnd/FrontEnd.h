@@ -26,5 +26,5 @@ private:
 	Ui::FrontEndClass ui;
 	TwixtGame& game;
 	BoardWidget* boardWidget;
-	//GameStatsWidget* gameStatsWidget;
+	GameStatsWidget* gameStatsWidget;
 };
