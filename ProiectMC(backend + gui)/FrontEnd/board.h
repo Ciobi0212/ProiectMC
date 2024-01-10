@@ -10,6 +10,7 @@ namespace twixt {
 	public:
 		Board();
 		~Board();
+		Board(const Board& board);
 		
 		void drawBoard();
 		size_t getSize() const;
@@ -28,7 +29,7 @@ namespace twixt {
 		
 
 	public:
-		static constexpr size_t BOARD_SIZE{ 12 };
+		static constexpr size_t BOARD_SIZE{ 24 };
 		
 	 private:
 		std::vector<std::vector<Cell>> m_board;

@@ -34,22 +34,22 @@ namespace twixt {
 		void setNumOfLinksLeft(uint8_t numOfLinksLeft);
 		void setPlacedPeg(bool status);
 		void setSelectedPeg(Peg* selectedPeg);
-		std::vector<std::reference_wrapper<Peg>> getPegs() const;
-		std::vector<std::reference_wrapper<Link>> getLinks() const;
+		//std::vector<std::reference_wrapper<Peg>> getPegs() const;
+		//std::vector<std::reference_wrapper<Link>> getLinks() const;
 		//std::vector<Peg*> setPegs(const std::vector<Peg&>& pegs);
 		//std::vector<Link*> setLinks(const std::vector<Link&>& links);
 		
 		void placePegOnBoard(Board& board, const Position& pos);
 		void placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2);
 		void removeLinkFromBoard(Board& board, Link* linkToRemove);
-		void addPeg(Peg& peg);
-		void addLink(Link& link);
+		
 		
 		bool linkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const;
 		bool pegCanBePlaced(Board& board, const Position& pos) const;
 		bool checkLinkOverlap(Board& board, const Position& pos1, const Position& pos2) const;
 		bool checkLinkOverlapImproved(Board& board, const Position& pos1, const Position& pos2) const;
 		bool checkForWin(Board& board);
+		bool checkOverlapHelper(const Position& pos1, const Position& pos2, Link* link) const;
 
 		// = operator
 		Player& operator=(const Player& other);
@@ -66,7 +66,7 @@ namespace twixt {
 		BaseType m_baseType;
 		bool m_placedPeg{false};
 		Peg* m_selectedPeg{nullptr};
-		std::vector<std::reference_wrapper<Peg>> m_pegs;
-		std::vector<std::reference_wrapper<Link>> m_links;
+		//std::vector<std::reference_wrapper<Peg>> m_pegs;
+		//std::vector<std::reference_wrapper<Link>> m_links;
 	};
 }

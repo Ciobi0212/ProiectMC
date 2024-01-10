@@ -18,8 +18,7 @@ BoardWidget::BoardWidget(TwixtGame& game, QWidget* parent)
 	recommandedAction = Action{ ActionType::NONE, Position{0,0}, Position{0,0} };
 }
 
-BoardWidget::~BoardWidget()
-{}
+BoardWidget::~BoardWidget() = default;
 
 void BoardWidget::drawBoard(QPainter& painter)
 {

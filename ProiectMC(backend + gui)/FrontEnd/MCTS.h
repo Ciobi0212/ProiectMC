@@ -1,9 +1,10 @@
 #pragma once
 #include "TwixtGame.h"
 #include <random>
+#include <thread>
 class MonteCarloTreeSearchNode {
 public:
-	MonteCarloTreeSearchNode(TwixtGame& state, MonteCarloTreeSearchNode* parent = nullptr, Action parent_action = Action(ActionType::NONE, { -1,-1 }, { -1, -1 }));
+	MonteCarloTreeSearchNode(TwixtGame& state, std::mt19937& eng, MonteCarloTreeSearchNode* parent = nullptr, Action parent_action = Action(ActionType::NONE, { -1,-1 }, { -1, -1 }));
 	~MonteCarloTreeSearchNode();
 	MonteCarloTreeSearchNode* select(TwixtGame& state);
 	MonteCarloTreeSearchNode* expand(TwixtGame& state);
@@ -20,8 +21,7 @@ public:
 	ActionSet untried_actions;
 	double wins;
 	double visits;
-	std::random_device rd;
-	std::mt19937 eng{rd()};
+	std::mt19937& eng;
 };
 
 class MCTS {
@@ -33,5 +33,7 @@ public:
 //private:
 	MonteCarloTreeSearchNode* root;
 	TwixtGame original_state;
+	std::random_device rd;
+	std::mt19937 eng;
 };
 

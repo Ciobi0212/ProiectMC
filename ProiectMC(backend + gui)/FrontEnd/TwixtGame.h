@@ -42,6 +42,8 @@ public:
 	Board& getBoard();
 	void switchPlayer();
 	Player& getCurrentPlayer();
+	Player& getFirstPlayer();
+	Player& getSecondPlayer();
 	
 
 	//Helper Functions for AI

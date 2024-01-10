@@ -18,6 +18,8 @@ namespace twixt {
 	public:
 		Peg();
 		Peg(size_t rowOnBoard, size_t columnOnBoard, Color color, QPoint positionOnScreen = QPoint{ 0,0 }, QColor qcolor = QColor{ 0,0,0 });
+		//copy constructor
+		Peg(const Peg& peg);
 		~Peg();
 		size_t getRowOnBoard() const;
 		size_t getColumnOnBoard() const;

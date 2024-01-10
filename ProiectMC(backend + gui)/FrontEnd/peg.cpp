@@ -5,6 +5,15 @@ Peg::Peg() = default;
 
 Peg::Peg(size_t rowOnBoard, size_t columnOnBoard, Color color, QPoint positionOnScreen, QColor qcolor) : m_rowOnBoard{ rowOnBoard }, m_columnOnBoard{ columnOnBoard }, m_color{ color }, m_positionOnScreen{ positionOnScreen }, m_qcolor{qcolor} {}
 
+twixt::Peg::Peg(const Peg& peg)
+{
+	m_rowOnBoard = peg.m_rowOnBoard;
+	m_columnOnBoard = peg.m_columnOnBoard;
+	m_color = peg.m_color;
+	m_positionOnScreen = peg.m_positionOnScreen;
+	m_qcolor = peg.m_qcolor;
+}
+
 Peg::~Peg() = default;
 
 size_t Peg::getRowOnBoard() const {

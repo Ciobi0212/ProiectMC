@@ -2,7 +2,7 @@
 #include <fstream>
 //#include "MCTS.h"
 //
-MonteCarloTreeSearchNode::MonteCarloTreeSearchNode(TwixtGame& state, MonteCarloTreeSearchNode* parent, Action parent_action)
+MonteCarloTreeSearchNode::MonteCarloTreeSearchNode(TwixtGame& state, std::mt19937& eng, MonteCarloTreeSearchNode* parent, Action parent_action) : eng{eng}
 {
 	this->parent = parent;
 	this->parent_action = parent_action;
@@ -10,6 +10,7 @@ MonteCarloTreeSearchNode::MonteCarloTreeSearchNode(TwixtGame& state, MonteCarloT
 	this->visits = 0;
 	this->playerTurn = state.getCurrentPlayer().getColor();
 	this->untried_actions = state.getValidPegActions();
+	
 }
 
 MonteCarloTreeSearchNode::~MonteCarloTreeSearchNode() = default;
@@ -129,10 +130,11 @@ MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::select(TwixtGame& state)
 	{
 		if (child->visits == 0)
 		{
-			return child;
+			bestChildren.push_back(child);
+			break;
 		}
 		else {
-			double ucb = getUCBValue(child, sqrt(2.0));
+			double ucb = getUCBValue(child, 2.0);
 			if (ucb > bestUcb)
 			{
 				bestUcb = ucb;
@@ -174,7 +176,7 @@ MonteCarloTreeSearchNode* MonteCarloTreeSearchNode::expand(TwixtGame& state)
 		 state.goToNextState(linkAction);
 	}
 	state.switchPlayer();
-	MonteCarloTreeSearchNode* child_node = new MonteCarloTreeSearchNode(state, this, action);
+	MonteCarloTreeSearchNode* child_node = new MonteCarloTreeSearchNode(state,eng, this, action);
 	children.push_back(child_node);
 	return child_node;
 }
@@ -210,8 +212,6 @@ double MonteCarloTreeSearchNode::rollout(TwixtGame& state)
 			randomMove = *it;
 			simulationMoves.push_back(randomMove);
 			 gameCopy.goToNextState(randomMove);
-			 if (std::get<1>(randomMove) == Position(1, 9))
-				 int a = 2;
 		}
 		nextLinkActions = gameCopy.getValidLinkActionsImproved(std::get<1>(randomMove));
 		if (!nextLinkActions.empty()) {
@@ -264,15 +264,14 @@ bool MonteCarloTreeSearchNode::is_terminal_node()
 	return untried_actions.empty() && children.size() > 0;
 }
 
-MCTS::MCTS(TwixtGame& state)
+MCTS::MCTS(TwixtGame& state) : eng{ rd() }, original_state{ state }
 {
-	this->root = new MonteCarloTreeSearchNode(state);
-	original_state = state;
+	this->root = new MonteCarloTreeSearchNode(state, eng);
 }
 
 MCTS::~MCTS()
 {
-	//delete the whole tree
+	dealocateTree(root);
 }
 
 void MCTS::dealocateTree(MonteCarloTreeSearchNode* node)
@@ -290,7 +289,7 @@ Action MCTS::best_action(uint16_t simulations_number)
 {
 	for (uint16_t i = 0; i < simulations_number; i++) {
 		MonteCarloTreeSearchNode* node = root;
-		TwixtGame state_copy = original_state;
+		TwixtGame state_copy{ original_state };
 		if (i == 2000)
 			int a = 2;
 		while (node->is_terminal_node())

@@ -18,8 +18,6 @@ twixt::Player::Player(const Player& other)
 	m_qcolor = other.m_qcolor;
 	m_numOfPegsLeft = other.m_numOfPegsLeft;
 	m_numOfLinksLeft = other.m_numOfLinksLeft;
-	m_pegs = other.m_pegs;
-	m_links = other.m_links;
 	m_placedPeg = other.m_placedPeg;
 	m_selectedPeg = other.m_selectedPeg;
 }
@@ -87,28 +85,13 @@ void twixt::Player::setSelectedPeg(Peg* selectedPeg)
 	m_selectedPeg = selectedPeg;
 }
 
-std::vector<std::reference_wrapper<Peg>> Player::getPegs() const {
-	return m_pegs;
-}
-
-std::vector<std::reference_wrapper<Link>> Player::getLinks() const {
-	return m_links;
-}
 
 //std::vector<Peg*> Player::setPegs(const std::vector<Peg*>& pegs) {
 //	this->m_pegs = pegs;
 //	return this->m_pegs;
 //}
 
-void twixt::Player::addPeg(Peg& peg)
-{
-	m_pegs.push_back(peg);
-}
 
-void twixt::Player::addLink(Link& link)
-{
-	m_links.push_back(link);
-}
 
 
 
@@ -143,12 +126,11 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 										  { x + 2, y + 1 }, { x - 1, y - 2 }, { x - 1, y + 2 },
 										  { x + 1, y - 2 }, { x + 1, y + 2 } };
 
-	for (auto& pos : validPositions) {
-		if (pos1 == pos)
-			return true;
-	}
 	
-		return false;
+	bool isValidPosition = false;
+	std::for_each(validPositions.begin(), validPositions.end(), [&](const Position& pos) { if (pos == pos1) isValidPosition = true; });
+	
+		return isValidPosition;
 }
 
 bool twixt::Player::pegCanBePlaced(Board& board, const Position& pos) const
@@ -433,6 +415,37 @@ bool twixt::Player::checkForWin(Board& board)
 	return false;
 }
 
+bool twixt::Player::checkOverlapHelper(const Position& pos1, const Position& pos2, Link* link) const
+{
+	auto [x1, y1] = pos1;
+	auto [x2, y2] = pos2;
+	auto [x3, y3] = link->getP1().getPosition();
+	auto [x4, y4] = link->getP2().getPosition();
+
+	if (!((x1 == x3 && y1 == y3 && link->getP1().getColor() == m_color) ||
+		(x1 == x4 && y1 == y4 && link->getP2().getColor() == m_color) ||
+		(x2 == x3 && y2 == y3 && link->getP1().getColor() == m_color) ||
+		(x2 == x4 && y2 == y4 && link->getP2().getColor() == m_color)))
+		return false;
+
+	else {
+		auto orientation = [](const Position& p1, const Position& p2, const Position& p3) {
+			int val = (p2.second - p1.second) * (p3.first - p2.first) -
+				(p2.first - p1.first) * (p3.second - p2.second);
+			if (val == 0) return 0;  // colinear 
+			return (val > 0) ? 1 : 2; // clock or counterclock wise 
+			};
+
+		int o1 = orientation({ x1, y1 }, { x2, y2 }, { x3, y3 });
+		int o2 = orientation({ x1, y1 }, { x2, y2 }, { x4, y4 });
+		int o3 = orientation({ x3, y3 }, { x4, y4 }, { x1, y1 });
+		int o4 = orientation({ x3, y3 }, { x4, y4 }, { x2, y2 });
+		if (o1 != o2 && o3 != o4)
+			return true;
+	}
+}
+
+
 Player& twixt::Player::operator=(const Player& other)
 {
 	if (this != &other) {
@@ -442,8 +455,6 @@ Player& twixt::Player::operator=(const Player& other)
 		m_qcolor = other.m_qcolor;
 		m_numOfPegsLeft = other.m_numOfPegsLeft;
 		m_numOfLinksLeft = other.m_numOfLinksLeft;
-		m_pegs = other.m_pegs;
-		m_links = other.m_links;
 	}
 	return *this;
 }
@@ -453,7 +464,6 @@ void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const P
 	Link* linkToAdd = new Link{ board[pos1].getPeg(), board[pos2].getPeg(), m_color };
 	board[pos1].addLink(linkToAdd);
 	board[pos2].addLink(linkToAdd);
-	this->addLink(*linkToAdd);
 	this->m_numOfLinksLeft--;
 }
 
@@ -483,7 +493,6 @@ void twixt::Player::placePegOnBoard(Board& board, const Position& pos)
 	Peg* pegToAdd = new Peg{ x, y, m_color, curentCell.getPositionOnScreen(), m_qcolor};
 	curentCell.setPeg(pegToAdd);
 	curentCell.setColor(m_color);
-	this->addPeg(*pegToAdd);
 	this->m_numOfPegsLeft--;
 	m_placedPeg = true;
 

@@ -8,11 +8,10 @@ FrontEnd::FrontEnd(TwixtGame& game, QWidget* parent)
 	setWindowTitle("Twixt");
 
 	boardWidget = new BoardWidget(game, this);
-	boardWidget->move((widthRes - boardWidget->width()) / 2, (heightRes - boardWidget->height()) / 2);
+	boardWidget->move((widthRes - boardWidget->width()) / 2, (heightRes - boardWidget->height()));
 
 	gameStatsWidget = new GameStatsWidget(game, *boardWidget, this);
 	gameStatsWidget->move(0, 0);
 }
 
-FrontEnd::~FrontEnd()
-{}
+FrontEnd::~FrontEnd() = default;

@@ -8,12 +8,10 @@ TwixtGame::TwixtGame() {
 	currentPlayer = firstPlayer.getColor();
 }
 
-TwixtGame::~TwixtGame() {
-}
+TwixtGame::~TwixtGame() = default;
 
-TwixtGame::TwixtGame(TwixtGame& other)
+TwixtGame::TwixtGame(TwixtGame& other) : board{ other.board }
 {
-	board = other.board;
 	firstPlayer = other.firstPlayer;
 	secondPlayer = other.secondPlayer;
 
@@ -60,6 +58,16 @@ Player& TwixtGame::getCurrentPlayer()
 	{
 		return secondPlayer;
 	}
+}
+
+Player& TwixtGame::getFirstPlayer()
+{
+	return firstPlayer;
+}
+
+Player& TwixtGame::getSecondPlayer()
+{
+	return secondPlayer;
 }
 
 ActionSet TwixtGame::getValidActions()
