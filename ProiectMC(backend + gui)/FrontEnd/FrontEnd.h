@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <fstream>
 #include "ui_FrontEnd.h"
 #include "TwixtGame.h"
 #include "BoardWidget.h"

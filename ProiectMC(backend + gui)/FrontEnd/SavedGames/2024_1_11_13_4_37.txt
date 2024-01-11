@@ -1,0 +1,7 @@
+12
+RED PEG 0 1
+BLUE PEG 2 1
+RED PEG 2 2
+RED LINK 2 2 0 1
+CurrentPlayer RED
+CanPlacePeg 0

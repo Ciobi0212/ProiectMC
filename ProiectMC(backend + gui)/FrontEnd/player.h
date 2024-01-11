@@ -27,6 +27,7 @@ namespace twixt {
 		Color getColor() const;
 		QColor getQColor() const;
 		Peg* getSelectedPeg() const;
+		bool getPlacedPeg() const;
 		void setName(const std::string& name);
 		void setColor(Color color);
 		void setQColor(QColor qcolor);
@@ -34,6 +35,7 @@ namespace twixt {
 		void setNumOfLinksLeft(uint8_t numOfLinksLeft);
 		void setPlacedPeg(bool status);
 		void setSelectedPeg(Peg* selectedPeg);
+		void resetPlayer();
 		//std::vector<std::reference_wrapper<Peg>> getPegs() const;
 		//std::vector<std::reference_wrapper<Link>> getLinks() const;
 		//std::vector<Peg*> setPegs(const std::vector<Peg&>& pegs);

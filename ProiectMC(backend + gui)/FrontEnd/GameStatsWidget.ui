@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>863</width>
+    <width>869</width>
     <height>400</height>
    </rect>
   </property>
@@ -49,6 +49,44 @@
    </property>
    <property name="text">
     <string>MCTS</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonSaveGame">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>50</y>
+     <width>111</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Save Game</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonLoadSave">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>50</y>
+     <width>111</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Load Save</string>
    </property>
   </widget>
  </widget>

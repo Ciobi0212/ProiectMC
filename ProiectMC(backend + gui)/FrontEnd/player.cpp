@@ -52,6 +52,11 @@ Peg* twixt::Player::getSelectedPeg() const
 	return m_selectedPeg;
 }
 
+bool twixt::Player::getPlacedPeg() const
+{
+	return m_placedPeg;
+}
+
 void Player::setName(const std::string& name) {
 	this->m_name = name;
 }
@@ -83,6 +88,14 @@ void twixt::Player::setPlacedPeg(bool status)
 void twixt::Player::setSelectedPeg(Peg* selectedPeg)
 {
 	m_selectedPeg = selectedPeg;
+}
+
+void twixt::Player::resetPlayer()
+{
+	m_numOfPegsLeft = 50;
+	m_numOfLinksLeft = 50;
+	m_placedPeg = false;
+	m_selectedPeg = nullptr;
 }
 
 

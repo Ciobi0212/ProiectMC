@@ -70,6 +70,11 @@ Player& TwixtGame::getSecondPlayer()
 	return secondPlayer;
 }
 
+void TwixtGame::setCurrentPlayer(Color color)
+{
+	currentPlayer = color;
+}
+
 ActionSet TwixtGame::getValidActions()
 {
 	ActionSet validActions;

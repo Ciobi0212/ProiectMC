@@ -1,6 +1,8 @@
 #pragma once
 #include "board.h";
 #include "player.h";
+#include <fstream>
+#include <regex>
 
 using namespace twixt;
 enum class ActionType {
@@ -44,6 +46,7 @@ public:
 	Player& getCurrentPlayer();
 	Player& getFirstPlayer();
 	Player& getSecondPlayer();
+	void setCurrentPlayer(Color color);
 	
 
 	//Helper Functions for AI
@@ -59,8 +62,6 @@ public:
 	
 	void goToNextState(Action& action);
 	//std::pair<double,bool> getValueAndCheckForWin(TwixtGame& state);
-	Player& getOpponent(Player& currentPlayer);
-	double getOpponnentValue(double value);
 	
 	
 private:

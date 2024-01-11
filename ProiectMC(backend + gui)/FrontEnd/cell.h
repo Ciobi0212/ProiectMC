@@ -10,8 +10,6 @@
 #include <qpoint.h>
 
 namespace twixt {
-	
-	
 	 class Cell {
 	private:
 		Peg* m_peg;

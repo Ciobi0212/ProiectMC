@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <cmath>
 #include <qmessagebox.h>
+#include <fstream>
 using namespace twixt;
 
 constexpr size_t boardWidth = 650;
@@ -34,6 +35,7 @@ public:
 	bool isCornerCell(size_t row, size_t col, size_t boardSize);
 	bool isClickOnCell(QPoint click, Cell& cell);
 	bool isClickOnLink(QPoint click, Link* link);
+	void setScreenCoordsForCells();
 
 	//Event handlers
 	void handleCellClick(const Position& pos, Player& currentPlayer, Board& board);
@@ -45,6 +47,10 @@ public:
 
 	//
 	void setRecommendedAction(Action action);
+	void loadSave(const std::string& saveGamePath);
+	void resetGame();
+	//void savePegMove(const Position& pos, const Player& player);
+	//void saveLinkMove(const Position& pos1,const Position& pos2, int playerIndex);
 
 private:
 	Ui::BoardWidgetClass ui;

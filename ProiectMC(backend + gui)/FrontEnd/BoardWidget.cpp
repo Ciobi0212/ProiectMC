@@ -5,15 +5,13 @@ BoardWidget::BoardWidget(TwixtGame& game, QWidget* parent)
 {
 	ui.setupUi(this);
 	setFixedSize(boardWidth, boardHeight);
+	setWindowTitle("Twixt");
+	
 	boardSize = game.getBoard().getSize();
 	cellSize = boardWidth / boardSize;
 
 	//set screenCoords for all cells, account for the fact the widget is in the center of the window
-	for (size_t row = 0; row < boardSize; ++row) {
-		for (size_t col = 0; col < boardSize; ++col) {
-			game.getBoard()[{row, col}].setPositionOnScreen(QPoint(col * cellSize + cellSize / 2 - radius, row * cellSize + cellSize / 2 - radius));
-		}
-	}
+	setScreenCoordsForCells();
 
 	recommandedAction = Action{ ActionType::NONE, Position{0,0}, Position{0,0} };
 }
@@ -145,6 +143,14 @@ bool BoardWidget::isClickOnLink(QPoint click, Link* link)
 
 	return distance < threshold;
 }
+void BoardWidget::setScreenCoordsForCells()
+{
+	for (size_t row = 0; row < boardSize; ++row) {
+		for (size_t col = 0; col < boardSize; ++col) {
+			game.getBoard()[{row, col}].setPositionOnScreen(QPoint(col * cellSize + cellSize / 2 - radius, row * cellSize + cellSize / 2 - radius));
+		}
+	}
+}
 void BoardWidget::handleCellClick(const Position& pos, Player& currentPlayer, Board& board)
 {
 	if (!board[pos].hasPeg()) { // cell is empty                             
@@ -184,7 +190,7 @@ void BoardWidget::handleLinkClick(Link* link, Player& currentPlayer, Board& boar
 	}
 
 }
-//
+
 void BoardWidget::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
@@ -257,3 +263,74 @@ void BoardWidget::setRecommendedAction(Action action)
 {
 	recommandedAction = action;
 }
+
+void BoardWidget::loadSave(const std::string& savedGamePath)
+{
+	std::ifstream savedGame(savedGamePath);
+	std::string line;
+	std::smatch match;
+	
+	if (!savedGame.is_open()) {
+		throw std::runtime_error("Could not open file");
+	}
+	
+	savedGame >> line;
+	if (std::stoul(line) != game.getBoard().getSize()) {
+		QMessageBox msgBox;
+		msgBox.setText("The save file does not match the current board size");
+		msgBox.exec();
+		return;
+	}
+	
+	resetGame();
+	game.getCurrentPlayer().setPlacedPeg(false);
+	while (!savedGame.eof()) {
+		std::getline(savedGame, line);
+		std::regex regex("[^\\s]+");
+		std::sregex_iterator words_begin(line.begin(), line.end(), regex), words_end;
+		std::vector<std::string> tokens;
+		std::for_each(words_begin, words_end, [&tokens](const std::smatch& m) { tokens.push_back(m.str()); });
+
+		if (tokens.size() > 0) {
+			if (tokens[0] == "RED") {
+				game.setCurrentPlayer(Color::RED);
+			}
+			else if (tokens[0] == "BLUE") {
+				game.setCurrentPlayer(Color::BLUE);
+			}
+
+			if (tokens[1] == "PEG") {
+				Position pos = { std::stoul(tokens[2]), std::stoul(tokens[3]) };
+				game.getCurrentPlayer().placePegOnBoard(game.getBoard(), pos);
+				game.getCurrentPlayer().setPlacedPeg(false);
+			}
+			else if (tokens[1] == "LINK") {
+				Position pos1 = { std::stoul(tokens[2]), std::stoul(tokens[3]) };
+				Position pos2 = { std::stoul(tokens[4]), std::stoul(tokens[5]) };
+				game.getCurrentPlayer().placeLinkOnBoard(game.getBoard(), pos1, pos2);
+			}
+
+			if (tokens[0] == "CurrentPlayer") {
+				 tokens[1] == "RED" ? game.setCurrentPlayer(Color::RED) : game.setCurrentPlayer(Color::BLUE);
+			}
+			if (tokens[0] == "CanPlacePeg") {
+				game.getCurrentPlayer().setPlacedPeg((tokens[1] == "0" ? true : false));
+			}
+		}
+	}
+}
+
+void BoardWidget::resetGame()
+{
+	Board& board = game.getBoard();
+	board.resetBoard();
+	game.getFirstPlayer().resetPlayer();
+	game.getSecondPlayer().resetPlayer();
+	setScreenCoordsForCells();
+}
+
+//void BoardWidget::savePegMove(const Position& pos, const Player& player)
+//{
+//	int playerIndex = player.getColor() == Color::RED ? 0 : 1;
+//	fout << playerIndex << " " << 0 << " " << pos.first << " " << pos.second << "\n";
+//}

@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+	std::string savePath = "SavedGames";
 	QApplication a(argc, argv);
 	TwixtGame game;
 	FrontEnd w(game);

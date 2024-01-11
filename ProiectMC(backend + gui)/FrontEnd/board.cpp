@@ -65,28 +65,6 @@ twixt::Board::Board(const Board& board)
 	
 }
 
-void twixt::Board::drawBoard()
-{
-	for (size_t i = 0; i < BOARD_SIZE; i++) {
-		for (size_t j = 0; j < BOARD_SIZE; j++) {
-				Cell& curentCell = m_board[i][j];
-				Color color = curentCell.getColor();
-				switch (color) {
-				case Color::RED:
-					std::cout << "R";
-					break;
-				case Color::BLUE:
-					std::cout << "B";
-					break;
-				default:
-					std::cout << " ";
-					break;
-				}
-		}
-		std::cout << std::endl;
-	}
-}
-
 size_t twixt::Board::getSize() const
 {
 	return BOARD_SIZE;
@@ -97,6 +75,18 @@ bool twixt::Board::isInBounds(const Position& pos) const
 	auto& [line, column] = pos;
 
 	return line >= 0 && line < BOARD_SIZE&& column >= 0 && column < BOARD_SIZE;
+}
+
+void twixt::Board::resetBoard()
+{
+	for (size_t i = 0; i < BOARD_SIZE; i++) {
+		m_board[i].clear();
+	}
+	m_board.clear();
+
+	m_board.resize(BOARD_SIZE);
+	for (std::size_t i = 0; i < BOARD_SIZE; i++)
+		m_board[i].resize(BOARD_SIZE);
 }
 
 Cell& twixt::Board::operator[](const Position& pos)

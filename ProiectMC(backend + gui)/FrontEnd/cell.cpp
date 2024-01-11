@@ -8,7 +8,9 @@ Cell::Cell() {
 	m_color = Color::NONE;
 }
 
-Cell::~Cell() = default;
+Cell::~Cell() {
+	m_peg = nullptr;
+}
 
 Color Cell::getColor() const {
 	return m_color;

@@ -11,8 +11,7 @@ namespace twixt {
 		Board();
 		~Board();
 		Board(const Board& board);
-		
-		void drawBoard();
+
 		size_t getSize() const;
 		
 		using Position = std::pair<std::size_t, std::size_t>;
@@ -23,6 +22,7 @@ namespace twixt {
 		};
 
 	    bool isInBounds(const Position& pos) const;
+		void resetBoard();
 
 		Cell& operator[](const Position& pos);
 		const Cell& operator[](const Position& pos) const;
