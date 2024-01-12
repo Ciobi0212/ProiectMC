@@ -10,70 +10,24 @@ TwixtGame::TwixtGame() {
 
 TwixtGame::~TwixtGame() = default;
 
-TwixtGame::TwixtGame(TwixtGame& other) : board{ other.board }
-{
-	firstPlayer = other.firstPlayer;
-	secondPlayer = other.secondPlayer;
+TwixtGame::TwixtGame(TwixtGame& other) : board{ other.board }, firstPlayer{ other.firstPlayer }, secondPlayer{ other.secondPlayer }, currentPlayer{ other.currentPlayer } {}
 
-	
-	if (other.currentPlayer == Color::RED)
-	{
-		currentPlayer = firstPlayer.getColor();
-	}
-	else
-	{
-		currentPlayer = secondPlayer.getColor();
-	}
+Board& TwixtGame::getBoard() { return board; }
+
+void TwixtGame::switchPlayer() {
+	Player& current = getCurrentPlayer();
+	current.setPlacedPeg(false);
+	current.setSelectedPeg(nullptr);
+	currentPlayer = (currentPlayer == firstPlayer.getColor()) ? secondPlayer.getColor() : firstPlayer.getColor();
 }
 
-Board& TwixtGame::getBoard()
-{
-	return board;
-}
+Player& TwixtGame::getCurrentPlayer() { return (currentPlayer == firstPlayer.getColor()) ? firstPlayer : secondPlayer; }
 
-void TwixtGame::switchPlayer()
-{
-	if (currentPlayer == firstPlayer.getColor())
-	{
-		firstPlayer.setPlacedPeg(false);
-		firstPlayer.setSelectedPeg(nullptr);
-		currentPlayer = secondPlayer.getColor();
-	}
-	else
-	{
-		secondPlayer.setPlacedPeg(false);
-		secondPlayer.setSelectedPeg(nullptr);
-		currentPlayer = firstPlayer.getColor();
-	}
-}
+Player& TwixtGame::getFirstPlayer() { return firstPlayer; }
 
+Player& TwixtGame::getSecondPlayer() { return secondPlayer; }
 
-Player& TwixtGame::getCurrentPlayer()
-{
-	if (currentPlayer == firstPlayer.getColor())
-	{
-		return firstPlayer;
-	}
-	else
-	{
-		return secondPlayer;
-	}
-}
-
-Player& TwixtGame::getFirstPlayer()
-{
-	return firstPlayer;
-}
-
-Player& TwixtGame::getSecondPlayer()
-{
-	return secondPlayer;
-}
-
-void TwixtGame::setCurrentPlayer(Color color)
-{
-	currentPlayer = color;
-}
+void TwixtGame::setCurrentPlayer(Color color) { currentPlayer = color; }
 
 ActionSet TwixtGame::getValidActions()
 {

@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <ClInclude Include="Utils.h" />
     <QtMoc Include="BoardWidget.h" />
     <ClInclude Include="cell.h" />
     <QtMoc Include="GameStatsWidget.h" />

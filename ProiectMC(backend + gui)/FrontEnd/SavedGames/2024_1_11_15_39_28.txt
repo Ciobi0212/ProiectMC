@@ -1,0 +1,7 @@
+12
+RED PEG 3 4
+BLUE PEG 6 8
+BLUE PEG 8 4
+RED PEG 8 8
+CurrentPlayer RED
+CanPlacePeg 1

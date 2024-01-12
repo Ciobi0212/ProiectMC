@@ -6,12 +6,12 @@ class MonteCarloTreeSearchNode {
 public:
 	MonteCarloTreeSearchNode(TwixtGame& state, std::mt19937& eng, MonteCarloTreeSearchNode* parent = nullptr, Action parent_action = Action(ActionType::NONE, { -1,-1 }, { -1, -1 }));
 	~MonteCarloTreeSearchNode();
-	MonteCarloTreeSearchNode* select(TwixtGame& state);
+	MonteCarloTreeSearchNode* select(TwixtGame& state) const;
 	MonteCarloTreeSearchNode* expand(TwixtGame& state);
-	double rollout(TwixtGame& state);
+	double rollout(TwixtGame& state) const;
 	void backpropagate(double result);
-	double getUCBValue(MonteCarloTreeSearchNode* node, double exploration_parameter = 1.414);
-	bool is_terminal_node();
+	double getUCBValue(MonteCarloTreeSearchNode* node, double exploration_parameter = 1.414) const;
+	bool is_terminal_node() const;
 	
 
 	MonteCarloTreeSearchNode* parent;
@@ -30,7 +30,7 @@ public:
 	~MCTS();
 	void dealocateTree(MonteCarloTreeSearchNode* node);
 	Action best_action(uint16_t simulations_number);
-//private:
+private:
 	MonteCarloTreeSearchNode* root;
 	TwixtGame original_state;
 	std::random_device rd;

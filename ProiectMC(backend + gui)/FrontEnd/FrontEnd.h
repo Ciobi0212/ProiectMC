@@ -21,8 +21,6 @@ public:
 	FrontEnd(TwixtGame& game, QWidget* parent = nullptr);
 	~FrontEnd();
 
-	
-
 private:
 	Ui::FrontEndClass ui;
 	TwixtGame& game;

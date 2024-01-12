@@ -1,7 +1,7 @@
 #include "FrontEnd.h"
 
 FrontEnd::FrontEnd(TwixtGame& game, QWidget* parent)
-	: QMainWindow(parent), game{ game }
+	: QMainWindow{ parent }, game{ game }
 {
 	ui.setupUi(this);
 	setFixedSize(widthRes, heightRes);

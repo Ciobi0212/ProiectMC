@@ -1,44 +1,43 @@
-#include "link.h";
-using namespace twixt;
+#include "link.h"
 
-Link::Link(Peg& p1, Peg& p2, Color color, QColor qcolor) : m_p1{ p1 }, m_p2{ p2 }, m_color{ color }, m_qcolor{qcolor} {}
+namespace twixt {
 
-Link::~Link() = default;
+    Link::Link(Peg& p1, Peg& p2, Color color, QColor qcolor)
+        : m_p1{ p1 }, m_p2{ p2 }, m_color{ color }, m_qcolor{ qcolor } {}
 
-Peg& Link::getP1() const {
-	return m_p1;
-}
+    Link::~Link() = default;
 
-Peg& Link::getP2() const {
-	return m_p2;
-}
+    Peg& Link::getP1() const {
+        return m_p1;
+    }
 
-Color Link::getColor() const {
-	return m_color;
-}
+    Peg& Link::getP2() const {
+        return m_p2;
+    }
 
-void twixt::Link::setColor(Color color)
-{
-	m_color = color;
-}
+    Color Link::getColor() const {
+        return m_color;
+    }
 
-void Link::setP1(Peg& p1) {
-	m_p1 = p1;
-}
+    void Link::setColor(Color color) {
+        m_color = color;
+    }
 
-void Link::setP2(Peg& p2) {
-	m_p2 = p2;
-}
+    void Link::setP1(Peg& p1) {
+        m_p1 = p1;
+    }
 
-Peg& twixt::Link::getOtherEnd(const Peg& peg) const
-{
-	if (peg == m_p1)
-		return m_p2;
-	else if (peg == m_p2)
-		return m_p1;
-	else
-		throw std::exception("Peg not found");
-}
+    void Link::setP2(Peg& p2) {
+        m_p2 = p2;
+    }
 
+    Peg& Link::getOtherEnd(const Peg& peg) const {
+        if (peg == m_p1)
+            return m_p2;
+        else if (peg == m_p2)
+            return m_p1;
+        else
+            throw std::exception("Peg not found");
+    }
 
-
+} 

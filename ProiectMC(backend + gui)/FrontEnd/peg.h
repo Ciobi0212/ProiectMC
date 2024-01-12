@@ -3,22 +3,15 @@
 #include <string>;
 #include <qpoint.h>
 #include <qcolor.h>
+#include "Utils.h"
 
 
 namespace twixt {
-	enum class Color { RED, BLUE, NONE };
-	using Position = std::pair<size_t, size_t>;
-	struct PositionHash {
-		std::size_t operator()(const Position& pos) const {
-			return std::hash<std::size_t>()(pos.first) ^ std::hash<std::size_t>()(pos.second);
-		}
-	};
-	
+
 	class Peg {
 	public:
 		Peg();
 		Peg(size_t rowOnBoard, size_t columnOnBoard, Color color, QPoint positionOnScreen = QPoint{ 0,0 }, QColor qcolor = QColor{ 0,0,0 });
-		//copy constructor
 		Peg(const Peg& peg);
 		~Peg();
 		size_t getRowOnBoard() const;

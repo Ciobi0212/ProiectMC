@@ -1,112 +1,108 @@
-#include "board.h";
-#include <queue>;
-#include <unordered_set>
-using namespace twixt;
+#include "board.h"
+#include <iostream>
 
-Board::Board()  {
-	m_board.resize(BOARD_SIZE);
-	for (std::size_t i = 0; i < BOARD_SIZE; i++)
-		m_board[i].resize(BOARD_SIZE);
-};
+namespace twixt {
 
+    Board::Board() {
+        m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
+    }
 
-Board::~Board() {
-	for (size_t i = 0; i < BOARD_SIZE; i++)
-		for (size_t j = 0; j < BOARD_SIZE; j++) {
-			Cell& cell = m_board[i][j];
-			if (cell.hasLinks())
-				for (Link* link : cell.getLinks()) {
-					Position pos1 = link->getP1().getPosition();
-					Position pos2 = link->getP2().getPosition();
-					if (isInBounds(pos1) && isInBounds(pos2)) {
-						m_board[pos1.first][pos1.second].removeLink(link);
-						m_board[pos2.first][pos2.second].removeLink(link);
-					}
-					delete link;
-					link = nullptr;
-				}
+    Board::~Board() {
+        for (size_t i = 0; i < BOARD_SIZE; i++) {
+            for (size_t j = 0; j < BOARD_SIZE; j++) {
+                cleanCell(m_board[i][j]);
+            }
+        }
+        std::cout << "test";
+    }
 
-			if (cell.hasPeg()) {
-				Peg* peg = &cell.getPeg();
-				delete peg;
-				peg = nullptr;
-			}
-		}
-	std::cout << "test";
-}
+    Board::Board(const Board& board) {
+        m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
 
-twixt::Board::Board(const Board& board)
-{
-	m_board.resize(BOARD_SIZE);
-	for (std::size_t i = 0; i < BOARD_SIZE; i++)
-		m_board[i].resize(BOARD_SIZE);
+        for (size_t i = 0; i < BOARD_SIZE; i++) {
+            for (size_t j = 0; j < BOARD_SIZE; j++) {
+                if (board[{i, j}].hasPeg()) {
+                    Peg* newPeg = new Peg(board[{i, j}].getPeg());
+                    m_board[i][j].setPeg(newPeg);
+                }
+            }
+        }
 
-	for (size_t i = 0; i < BOARD_SIZE; i++)
-		for (size_t j = 0; j < BOARD_SIZE; j++) {
-			if (board[{i, j}].hasPeg()) {
-				Peg* newPeg = new Peg(board[{i, j}].getPeg());
-				m_board[i][j].setPeg(newPeg);
-			}
-		}
-	
-	for (size_t i = 0; i < BOARD_SIZE; i++)
-		for (size_t j = 0; j < BOARD_SIZE; j++) {
-			if (board[{i, j}].hasLinks()) {
-				for (Link* link : board[{i, j}].getLinks()) {
-					Position pos1 = link->getP1().getPosition();
-					Position pos2 = link->getP2().getPosition();
-					Peg& peg1 = m_board[pos1.first][pos1.second].getPeg();
-					Peg& peg2 = m_board[pos2.first][pos2.second].getPeg();
-					Link* newLink = new Link(peg1, peg2, peg1.getColor(), peg1.getQColor());
-					m_board[i][j].addLink(newLink);
-				}
-			}
-		}
-	
-}
+        for (size_t i = 0; i < BOARD_SIZE; i++) {
+            for (size_t j = 0; j < BOARD_SIZE; j++) {
+                if (board[{i, j}].hasLinks()) {
+                    for (Link* link : board[{i, j}].getLinks()) {
+                        Position pos1 = link->getP1().getPosition();
+                        Position pos2 = link->getP2().getPosition();
+                        Peg& peg1 = m_board[pos1.first][pos1.second].getPeg();
+                        Peg& peg2 = m_board[pos2.first][pos2.second].getPeg();
+                        Link* newLink = new Link(peg1, peg2, peg1.getColor(), peg1.getQColor());
+                        m_board[i][j].addLink(newLink);
+                    }
+                }
+            }
+        }
+    }
 
-size_t twixt::Board::getSize() const
-{
-	return BOARD_SIZE;
-}
+    size_t Board::getSize() const {
+        return BOARD_SIZE;
+    }
 
-bool twixt::Board::isInBounds(const Position& pos) const
-{
-	auto& [line, column] = pos;
+    bool Board::isInBounds(const Position& pos) const {
+        auto& [line, column] = pos;
+        return line >= 0 && line < BOARD_SIZE && column >= 0 && column < BOARD_SIZE;
+    }
 
-	return line >= 0 && line < BOARD_SIZE&& column >= 0 && column < BOARD_SIZE;
-}
+    void Board::resetBoard() {
+        m_board.clear();
+        m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
+    }
 
-void twixt::Board::resetBoard()
-{
-	for (size_t i = 0; i < BOARD_SIZE; i++) {
-		m_board[i].clear();
-	}
-	m_board.clear();
+    Cell& Board::operator[](const Position& pos) {
+        auto& [line, column] = pos;
 
-	m_board.resize(BOARD_SIZE);
-	for (std::size_t i = 0; i < BOARD_SIZE; i++)
-		m_board[i].resize(BOARD_SIZE);
-}
+        if (!isInBounds(pos)) {
+            throw std::out_of_range("Position out of bounds");
+        }
 
-Cell& twixt::Board::operator[](const Position& pos)
-{
-	auto& [line, column] = pos;
+        return m_board[line][column];
+    }
 
-	if (!isInBounds(pos))
-		throw std::out_of_range("Position out of bounds");
+    const Cell& Board::operator[](const Position& pos) const {
+        auto& [line, column] = pos;
 
-	return m_board[line][column];
-	
-}
+        if (!isInBounds(pos)) {
+            throw std::out_of_range("Position out of bounds");
+        }
 
-const Cell& twixt::Board::operator[](const Position& pos) const
-{
-	auto& [line, column] = pos;
+        return m_board[line][column];
+    }
 
-	if (!isInBounds(pos))
-		throw std::out_of_range("Position out of bounds");
+    void Board::cleanCell(Cell& cell) {
+        if (cell.hasLinks()) {
+            for (Link* link : cell.getLinks()) {
+                cleanLink(link);
+            }
+        }
 
-	return m_board[line][column];
-}
+        if (cell.hasPeg()) {
+            cleanPeg(cell.getPeg());
+        }
+    }
 
+    void Board::cleanLink(Link* link) {
+        Position pos1 = link->getP1().getPosition();
+        Position pos2 = link->getP2().getPosition();
+        if (isInBounds(pos1) && isInBounds(pos2)) {
+            m_board[pos1.first][pos1.second].removeLink(link);
+            m_board[pos2.first][pos2.second].removeLink(link);
+        }
+
+        delete link;
+    }
+
+    void Board::cleanPeg(Peg& peg) {
+        delete& peg;
+    }
+
+}  

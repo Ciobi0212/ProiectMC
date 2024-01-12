@@ -32,9 +32,10 @@ public:
 	void drawRecommandation(QPainter& painter);
 
 	//Helper functions
-	bool isCornerCell(size_t row, size_t col, size_t boardSize);
-	bool isClickOnCell(QPoint click, Cell& cell);
-	bool isClickOnLink(QPoint click, Link* link);
+	bool isCornerCell(size_t row, size_t col, size_t boardSize) const;
+	bool isClickOnCell(QPoint click, Cell& cell) const;
+	bool isClickOnLink(QPoint click, Link* link) const;
+	
 	void setScreenCoordsForCells();
 
 	//Event handlers
@@ -44,13 +45,10 @@ public:
 
 	//Message functions
 	void winMessage(const Player& player);
-
-	//
+	
 	void setRecommendedAction(Action action);
 	void loadSave(const std::string& saveGamePath);
 	void resetGame();
-	//void savePegMove(const Position& pos, const Player& player);
-	//void saveLinkMove(const Position& pos1,const Position& pos2, int playerIndex);
 
 private:
 	Ui::BoardWidgetClass ui;
