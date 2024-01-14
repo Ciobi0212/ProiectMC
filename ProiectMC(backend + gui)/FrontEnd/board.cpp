@@ -50,7 +50,7 @@ namespace twixt {
         return BOARD_SIZE;
     }
 
-    bool Board::isInBounds(const Position& pos) const {
+    bool Board::isInBounds(const Position<>& pos) const {
         auto& [line, column] = pos;
         return line >= 0 && line < BOARD_SIZE && column >= 0 && column < BOARD_SIZE;
     }
@@ -60,7 +60,7 @@ namespace twixt {
         m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
     }
 
-    Cell& Board::operator[](const Position& pos) {
+    Cell& Board::operator[](const Position<>& pos) {
         auto& [line, column] = pos;
 
         if (!isInBounds(pos)) {
@@ -70,7 +70,7 @@ namespace twixt {
         return m_board[line][column];
     }
 
-    const Cell& Board::operator[](const Position& pos) const {
+    const Cell& Board::operator[](const Position<>& pos) const {
         auto& [line, column] = pos;
 
         if (!isInBounds(pos)) {

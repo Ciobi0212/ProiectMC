@@ -1,9 +1,10 @@
 #pragma once
 
-#include <unordered_set>
-#include <unordered_map>
-#include <tuple>
+#include <functional>
 #include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <tuple>
 
 // Enumeration for player colors
 enum class Color { RED, BLUE, NONE };
@@ -60,10 +61,17 @@ using ActionSet = std::unordered_set<Action<T, ActionType>, ActionHash<T>>;
 
 //Function to extract a random action from a set of actions
 template <typename T = std::size_t, typename ActionType = ActionType>
-Action<T, ActionType> extractRandomAction(ActionSet<T, ActionType>& actions, std::mt19937& gen);
+Action<T, ActionType> extractRandomAction(ActionSet<T, ActionType>& actions, std::mt19937& gen) {
+	std::uniform_int_distribution<> dis(0, actions.size() - 1);
+	auto it = actions.begin();
+	Action<T, ActionType> action = *std::next(it, dis(gen));;
+	actions.erase(action);
+	return action;
+}
 
 //Function to return a random index
 template <typename T = std::size_t>
-T randomIndex(T size, std::mt19937& gen);
-
-
+T randomIndex(T size, std::mt19937& gen) {
+	std::uniform_int_distribution<> dis(0, size - 1);
+	return dis(gen);
+}

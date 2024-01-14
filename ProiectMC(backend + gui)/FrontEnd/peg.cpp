@@ -44,7 +44,7 @@ bool Peg::operator==(const Peg& peg) const {
 	return m_rowOnBoard == peg.m_rowOnBoard && m_columnOnBoard == peg.m_columnOnBoard;
 }
 
-Position Peg::getPosition() const {
+Position<> Peg::getPosition() const {
 	return Position{ m_rowOnBoard, m_columnOnBoard };
 }
 

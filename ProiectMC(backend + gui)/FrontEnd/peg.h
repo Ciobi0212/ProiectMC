@@ -4,7 +4,7 @@
 #include <string>
 #include <QPoint>
 #include <QColor>
-#include "Utils.h"
+#include "Utils.cpp";
 
 namespace twixt {
 
@@ -20,7 +20,7 @@ namespace twixt {
         size_t getRowOnBoard() const;
         size_t getColumnOnBoard() const;
         Color getColor() const;
-        Position getPosition() const;
+        Position<> getPosition() const;
         QPoint getPositionOnScreen() const;
         QColor getQColor() const;
 

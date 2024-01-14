@@ -18,15 +18,15 @@ namespace twixt {
         size_t getSize() const;
 
         // Utility functions
-        bool isInBounds(const Position& pos) const;
+        bool isInBounds(const Position<>& pos) const;
         void cleanLink(Link* link);
         void cleanCell(Cell& cell);
         void cleanPeg(Peg& peg);
         void resetBoard();
 
         // Operator overloads
-        Cell& operator[](const Position& pos);
-        const Cell& operator[](const Position& pos) const;
+        Cell& operator[](const Position<>& pos);
+        const Cell& operator[](const Position<>& pos) const;
 
     private:
         // Member variables

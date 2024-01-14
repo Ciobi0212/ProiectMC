@@ -1,0 +1,11 @@
+8
+RED PEG 2 2
+RED PEG 4 3
+BLUE PEG 5 2
+BLUE PEG 6 4
+RED LINK 2 2 4 3
+BLUE LINK 5 2 6 4
+CurrentPlayer RED
+CanPlacePeg 1
+FirstPlayerNumOfPieces 8 9
+SecondPlayerNumOfPieces 8 9

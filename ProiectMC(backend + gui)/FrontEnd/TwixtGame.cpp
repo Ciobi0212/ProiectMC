@@ -33,30 +33,30 @@ Player& TwixtGame::getSecondPlayer() { return secondPlayer; }
 
 void TwixtGame::setCurrentPlayer(Color color) { currentPlayer = color; }
 
-ActionSet TwixtGame::getValidActions()
+ActionSet<> TwixtGame::getValidActions()
 {
-	ActionSet validActions;
+	ActionSet<> validActions;
 	Player& currentPlayer = getCurrentPlayer();
 	for (int i = 0; i < board.getSize(); i++)
 	{
 		for (int j = 0; j < board.getSize(); j++)
 		{
-			Position pos1 = Position(i, j);
+			Position<> pos1 = Position<>(i, j);
 			if (currentPlayer.pegCanBePlaced(board, pos1) && currentPlayer.getNumOfPegsLeft() > 0)
 			{
 				validActions.insert(std::make_tuple(ActionType::PLACE_PEG, pos1, pos1));
 			}
 			else if (board[pos1].hasPeg()) {
-				std::vector<Position> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
+				std::vector<Position<>> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
 					{ i + 2, j + 1 }, { i - 1, j - 2 }, { i - 1, j + 2 },
 					{ i + 1, j - 2 }, { i + 1, j + 2 } };
-				for (Position pos2 : validPositions)
+				for (Position<> pos2 : validPositions)
 				{
 					if (currentPlayer.linkCanBePlaced(board, pos1, pos2) && currentPlayer.getNumOfLinksLeft() > 0)
 					{
 						if (pos1 > pos2)
 							std::swap(pos1, pos2);
-						if (pos1 == Position(6, 2))
+						if (pos1 == Position<>(6, 2))
 							std::cout << "Link can be placed from ";
 						
 						validActions.insert(std::make_tuple(ActionType::PLACE_LINK, pos1, pos2));
@@ -69,9 +69,9 @@ ActionSet TwixtGame::getValidActions()
 	return validActions;
 }
 
-ActionSet TwixtGame::getValidPegActions()
+ActionSet<> TwixtGame::getValidPegActions()
 {
-	ActionSet validActions;
+	ActionSet<> validActions;
 	Player& currentPlayer = getCurrentPlayer();
 	if (currentPlayer.getNumOfPegsLeft() == 0)
 		return validActions;
@@ -81,7 +81,7 @@ ActionSet TwixtGame::getValidPegActions()
 	{
 		for (int j = 0; j < board.getSize(); j++)
 		{
-			Position pos1 = Position(i, j);
+			Position<> pos1 = Position<>(i, j);
 			if (currentPlayer.pegCanBePlaced(board, pos1))
 			{
 				validActions.insert(std::make_tuple(ActionType::PLACE_PEG, pos1, pos1));
@@ -92,20 +92,20 @@ ActionSet TwixtGame::getValidPegActions()
 	return validActions;
 }
 
-ActionSet TwixtGame::getValidLinkActions()
+ActionSet<> TwixtGame::getValidLinkActions()
 {
-	ActionSet validActions;
+	ActionSet<> validActions;
 	Player& currentPlayer = getCurrentPlayer();
 	for (int i = 0; i < board.getSize(); i++)
 	{
 		for (int j = 0; j < board.getSize(); j++)
 		{
-			Position pos1 = Position(i, j);
+			Position<> pos1 = Position<>(i, j);
 			if (board[pos1].hasPeg()) {
-				std::vector<Position> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
+				std::vector<Position<>> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
 					{ i + 2, j + 1 }, { i - 1, j - 2 }, { i - 1, j + 2 },
 					{ i + 1, j - 2 }, { i + 1, j + 2 } };
-				for (Position pos2 : validPositions)
+				for (Position<> pos2 : validPositions)
 				{
 					if (currentPlayer.linkCanBePlaced(board, pos1, pos2))
 					{
@@ -122,12 +122,12 @@ ActionSet TwixtGame::getValidLinkActions()
 	return validActions;
 }
 
-ActionSet TwixtGame::getValidLinkActionsImproved(Position positionOfLastPegPlaced)
+ActionSet<> TwixtGame::getValidLinkActionsImproved(Position<> positionOfLastPegPlaced)
 {
 	Player& currentPlayer = getCurrentPlayer();
-	ActionSet validActions;
+	ActionSet<> validActions;
 	auto [i, j] = positionOfLastPegPlaced;
-	std::vector<Position> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
+	std::vector<Position<>> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
 				{ i + 2, j + 1 }, { i - 1, j - 2 }, { i - 1, j + 2 },
 				{ i + 1, j - 2 }, { i + 1, j + 2 } };
 
@@ -146,12 +146,12 @@ ActionSet TwixtGame::getValidLinkActionsImproved(Position positionOfLastPegPlace
 	return validActions;
 }
 
-ActionSet TwixtGame::getValidImaginaryLinkActions(Position positionOfImaginaryPeg)
+ActionSet<> TwixtGame::getValidImaginaryLinkActions(Position<> positionOfImaginaryPeg)
 {
 	Player& currentPlayer = getCurrentPlayer();
-	ActionSet validActions;
+	ActionSet<> validActions;
 	auto [i, j] = positionOfImaginaryPeg;
-	std::vector<Position> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
+	std::vector<Position<>> validPositions{ { i - 2, j - 1 }, { i - 2, j + 1 }, { i + 2, j - 1 },
 				{ i + 2, j + 1 }, { i - 1, j - 2 }, { i - 1, j + 2 },
 				{ i + 1, j - 2 }, { i + 1, j + 2 } };
 
@@ -185,7 +185,7 @@ bool TwixtGame::currentPlayerWon()
 	return getCurrentPlayer().checkForWin(board);
 }
 
-void TwixtGame::goToNextState(const Action& action)
+void TwixtGame::goToNextState(const Action<>& action)
 {
 	ActionType actionType = std::get<0>(action);
 	Board& board = getBoard();

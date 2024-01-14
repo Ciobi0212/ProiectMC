@@ -26,14 +26,14 @@ namespace twixt {
 
         // Game state manipulation functions
         void switchPlayer();
-        void goToNextState(const Action& action);
+        void goToNextState(const Action<>& action);
 
         // Helper functions for AI
-        ActionSet getValidActions();
-        ActionSet getValidPegActions();
-        ActionSet getValidLinkActions();
-        ActionSet getValidLinkActionsImproved(Position positionOfLastPegPlaced);
-        ActionSet getValidImaginaryLinkActions(Position positionOfImaginaryPeg);
+        ActionSet<> getValidActions();
+        ActionSet<> getValidPegActions();
+        ActionSet<> getValidLinkActions();
+        ActionSet<> getValidLinkActionsImproved(Position<> positionOfLastPegPlaced);
+        ActionSet<> getValidImaginaryLinkActions(Position<> positionOfImaginaryPeg);
 
         // Game status functions
         bool isGameOver();

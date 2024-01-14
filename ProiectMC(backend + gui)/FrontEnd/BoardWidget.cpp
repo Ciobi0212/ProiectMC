@@ -129,7 +129,7 @@ void BoardWidget::setScreenCoordsForCells()
     }
 }
 
-void BoardWidget::handleCellClick(const Position& pos, Player& currentPlayer, Board& board)
+void BoardWidget::handleCellClick(const Position<>& pos, Player& currentPlayer, Board& board)
 {
     auto& currentCell = board[pos];
     if (!currentCell.hasPeg()) { // Cell is empty
@@ -249,7 +249,7 @@ void BoardWidget::winMessage(const Player& player)
     msgBox.exec();
 }
 
-void BoardWidget::setRecommendedActions(const std::vector<Action>& actions)
+void BoardWidget::setRecommendedActions(const std::vector<Action<>>& actions)
 {
     recommendedActions = actions;
 }

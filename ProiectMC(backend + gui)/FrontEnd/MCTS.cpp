@@ -2,15 +2,15 @@
 #include <fstream>
 #include <ranges>
 
-MonteCarloTreeSearchNode::MonteCarloTreeSearchNode(TwixtGame& state, std::mt19937& eng, std::shared_ptr<MonteCarloTreeSearchNode> parent, Action parent_action)
+MCTSNode::MCTSNode(TwixtGame& state, std::mt19937& eng, std::shared_ptr<MCTSNode> parent,Action<> parent_action)
     : eng{ eng }, parent{ parent }, parent_action{ parent_action }, wins{ 0.0 }, visits{ 0 }, playerTurn{ state.getCurrentPlayer().getColor() }, untried_actions{ state.getCurrentPlayer().getValidPegPositions() }
 {}
 
-MonteCarloTreeSearchNode::~MonteCarloTreeSearchNode() = default;
+MCTSNode::~MCTSNode() = default;
 
-std::shared_ptr<MonteCarloTreeSearchNode> MonteCarloTreeSearchNode::select(TwixtGame& state) const {
+std::shared_ptr<MCTSNode> MCTSNode::select(TwixtGame& state) const {
     double bestUcb = -std::numeric_limits<double>::infinity();
-    std::vector<std::shared_ptr<MonteCarloTreeSearchNode>> bestChildren;
+    std::vector<std::shared_ptr<MCTSNode>> bestChildren;
 
     for (const auto& child : children) {
         if (child->visits == 0) {
@@ -29,51 +29,43 @@ std::shared_ptr<MonteCarloTreeSearchNode> MonteCarloTreeSearchNode::select(Twixt
         }
     }
 
-    std::uniform_int_distribution<> distr(0, bestChildren.size() - 1);
-    int random_index = distr(eng);
+    size_t random_index = randomIndex(bestChildren.size(), eng);
     state.goToNextState(bestChildren[random_index]->parent_action);
-    ActionSet nextLinkActions = state.getValidLinkActionsImproved(std::get<1>(bestChildren[random_index]->parent_action));
+    ActionSet<> nextLinkActions = state.getValidLinkActionsImproved(std::get<1>(bestChildren[random_index]->parent_action));
 
-    for (const auto& linkAction : nextLinkActions) {
-        state.goToNextState(linkAction);
-    }
+    std::for_each(nextLinkActions.begin(), nextLinkActions.end(), [&state](const auto& linkAction) { state.goToNextState(linkAction); });
 
     state.switchPlayer();
     return bestChildren[random_index];
 }
 
-std::shared_ptr<MonteCarloTreeSearchNode> MonteCarloTreeSearchNode::expand(TwixtGame& state) {
-    std::uniform_int_distribution<> distr(0, untried_actions.size() - 1);
-    int random_index = distr(eng);
-    Action action = *std::next(untried_actions.begin(), random_index);
-    untried_actions.erase(action);
+std::shared_ptr<MCTSNode> MCTSNode::expand(TwixtGame& state) {
+   Action<> action = extractRandomAction(untried_actions, eng);
 
     state.goToNextState(action);
 
     ActionSet nextLinkActions = state.getValidLinkActionsImproved(std::get<1>(action));
 
-    for (const auto& linkAction : nextLinkActions) {
-        state.goToNextState(linkAction);
-    }
+    std::for_each(nextLinkActions.begin(), nextLinkActions.end(), [&state](const auto& linkAction) { state.goToNextState(linkAction); });
 
     state.switchPlayer();
-    auto child_node = std::make_shared<MonteCarloTreeSearchNode>(state, eng, shared_from_this(), action);
+    auto child_node = std::make_shared<MCTSNode>(state, eng, shared_from_this(), action);
     children.push_back(child_node);
     return child_node;
 }
 
-double MonteCarloTreeSearchNode::rollout(TwixtGame& state) const {
+double MCTSNode::rollout(TwixtGame& state) const {
     TwixtGame gameCopy(state);
     Player player = gameCopy.getCurrentPlayer();
-    ActionSet nextPegMoves = gameCopy.getCurrentPlayer().getValidPegPositions();
-    ActionSet nextLinkActions;
+    ActionSet<> nextPegMoves = gameCopy.getCurrentPlayer().getValidPegPositions();
+    ActionSet<> nextLinkActions;
 
     if (gameCopy.getCurrentPlayer().checkForWin(gameCopy.getBoard())) {
         return gameCopy.getCurrentPlayer().getColor() == player.getColor() ? -1 : 1;
     }
 
     while (!nextPegMoves.empty()) {
-        Action randomMove;
+       Action<> randomMove;
         nextPegMoves = gameCopy.getCurrentPlayer().getValidPegPositions();
 
         if (!nextPegMoves.empty()) {
@@ -107,8 +99,8 @@ double MonteCarloTreeSearchNode::rollout(TwixtGame& state) const {
     return 0.5;
 }
 
-void MonteCarloTreeSearchNode::backpropagate(double result) {
-    std::shared_ptr<MonteCarloTreeSearchNode> current_node = shared_from_this();
+void MCTSNode::backpropagate(double result) {
+    std::shared_ptr<MCTSNode> current_node = shared_from_this();
 
     while (current_node) {
         current_node->visits++;
@@ -118,22 +110,22 @@ void MonteCarloTreeSearchNode::backpropagate(double result) {
     }
 }
 
-double MonteCarloTreeSearchNode::getUCBValue(std::shared_ptr<MonteCarloTreeSearchNode> node, double exploration_parameter) const {
+double MCTSNode::getUCBValue(std::shared_ptr<MCTSNode> node, double exploration_parameter) const {
     double ucb_value = static_cast<double>(node->wins) / static_cast<double>(node->visits) + exploration_parameter * sqrt(log(node->parent->visits) / static_cast<double>(node->visits));
     return ucb_value;
 }
 
-bool MonteCarloTreeSearchNode::is_terminal_node() const {
+bool MCTSNode::is_terminal_node() const {
     return untried_actions.empty() && !children.empty();
 }
 
-MCTS::MCTS(TwixtGame& state) : eng{ rd() }, original_state{ state }, root{ std::make_shared<MonteCarloTreeSearchNode>(state, eng) } {}
+MCTS::MCTS(TwixtGame& state) : eng{ rd() }, original_state{ state }, root{ std::make_shared<MCTSNode>(state, eng) } {}
 
 MCTS::~MCTS() {
 	deallocateTree(root);
 }
 
-void MCTS::deallocateTree(std::shared_ptr<MonteCarloTreeSearchNode> node) {
+void MCTS::deallocateTree(std::shared_ptr<MCTSNode> node) {
 	if (node->children.empty()) {
 		return;
 	}
@@ -145,9 +137,9 @@ void MCTS::deallocateTree(std::shared_ptr<MonteCarloTreeSearchNode> node) {
 	node->children.clear();
 }
 
-std::vector<Action> MCTS::best_actions(uint32_t simulations_number) {
+std::vector<Action<>> MCTS::best_actions(uint32_t simulations_number) {
     for (uint32_t i = 0; i < simulations_number; i++) {
-        std::shared_ptr<MonteCarloTreeSearchNode> node = root;
+        std::shared_ptr<MCTSNode> node = root;
         TwixtGame state_copy{ original_state };
 
         while (node->is_terminal_node()) {
@@ -162,12 +154,12 @@ std::vector<Action> MCTS::best_actions(uint32_t simulations_number) {
     double bestUCB = 0;
     double bestWinRate = -std::numeric_limits<double>::infinity();
     uint32_t bestVisitCount = 0;
-    std::vector<Action> bestActions;
+    std::vector<Action<>> bestActions;
 
     std::ofstream fout("moves");
 
     for (uint32_t i = 0; i < root->children.size(); i++) {
-        std::shared_ptr<MonteCarloTreeSearchNode> child = root->children[i];
+        std::shared_ptr<MCTSNode> child = root->children[i];
         double winRate = static_cast<double>(child->wins) / static_cast<double>(child->visits);
 
         if (winRate > bestWinRate) {

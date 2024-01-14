@@ -5,5 +5,5 @@ class PMT {
 public:
 	PMT();
 	~PMT();
-	Action getBestAction(TwixtGame& game, size_t numSimulations);
+	Action<> getBestAction(TwixtGame& game, size_t numSimulations);
 };

@@ -114,6 +114,7 @@
     <ClCompile Include="peg.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="TwixtGame.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <QtRcc Include="FrontEnd.qrc" />
     <QtUic Include="BoardWidget.ui" />
     <QtUic Include="FrontEnd.ui" />

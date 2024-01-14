@@ -31,7 +31,7 @@ namespace twixt {
         QColor getQColor() const;
         Peg* getSelectedPeg() const;
         bool getPlacedPeg() const;
-        ActionSet& getValidPegPositions();
+        ActionSet<>& getValidPegPositions();
 
         // Setters
         void setName(const std::string& name);
@@ -44,20 +44,20 @@ namespace twixt {
         void resetPlayer();
 
         // Board-related functions
-        void placePegOnBoard(Board& board, const Position& pos);
-        void placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2);
+        void placePegOnBoard(Board& board, const Position<>& pos);
+        void placeLinkOnBoard(Board& board, const Position<>& pos1, const Position<>& pos2);
         void removeLinkFromBoard(Board& board, Link* linkToRemove);
 
         // Validation functions
-        bool linkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const;
-        bool imaginaryLinkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const;
-        bool pegCanBePlaced(Board& board, const Position& pos) const;
-        bool checkLinkOverlapImproved(Board& board, const Position& pos1, const Position& pos2) const;
+        bool linkCanBePlaced(Board& board, const Position<>& pos1, const Position<>& pos2) const;
+        bool imaginaryLinkCanBePlaced(Board& board, const Position<>& pos1, const Position<>& pos2) const;
+        bool pegCanBePlaced(Board& board, const Position<>& pos) const;
+        bool checkLinkOverlapImproved(Board& board, const Position<>& pos1, const Position<>& pos2) const;
         bool checkForWin(Board& board) const;
 
         // Valid peg move handling
         void initValidPegPositions(Board& board);
-        void eraseValidPegPosition(const Action& action);
+        void eraseValidPegPosition(const Action<>& action);
 
     private:
         // Member variables
@@ -71,6 +71,6 @@ namespace twixt {
         Peg* m_selectedPeg{ nullptr };
 
         // Useful for MCTS
-        ActionSet m_validPegPositions;
+        ActionSet<> m_validPegPositions;
     };
 }

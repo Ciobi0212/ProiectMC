@@ -78,7 +78,7 @@ void Player::resetPlayer() {
 	m_selectedPeg = nullptr;
 }
 
-bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const
+bool twixt::Player::linkCanBePlaced(Board& board, const Position<>& pos1, const Position<>& pos2) const
 {
 	size_t x = pos2.first;
 	size_t y = pos2.second;
@@ -101,12 +101,12 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 		}
 	}
 
-	std::vector<Position> validPositions{ { x - 2, y - 1 }, { x - 2, y + 1 }, { x + 2, y - 1 },
+	std::vector<Position<>> validPositions{ { x - 2, y - 1 }, { x - 2, y + 1 }, { x + 2, y - 1 },
 										  { x + 2, y + 1 }, { x - 1, y - 2 }, { x - 1, y + 2 },
 										  { x + 1, y - 2 }, { x + 1, y + 2 } };
 
 	
-	if (!std::any_of(validPositions.begin(), validPositions.end(), [&](const Position& pos) { return pos == pos1; })) {
+	if (!std::any_of(validPositions.begin(), validPositions.end(), [&](const Position<>& pos) { return pos == pos1; })) {
 		return false;
 	}
 
@@ -117,7 +117,7 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 	return true;
 }
 
-bool twixt::Player::imaginaryLinkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const
+bool twixt::Player::imaginaryLinkCanBePlaced(Board& board, const Position<>& pos1, const Position<>& pos2) const
 {
 	if (!(board.isInBounds(pos1) && board.isInBounds(pos2))) {
 		return false;
@@ -138,7 +138,7 @@ bool twixt::Player::imaginaryLinkCanBePlaced(Board& board, const Position& pos1,
 	return true;
 }
 
-bool twixt::Player::pegCanBePlaced(Board& board, const Position& pos) const
+bool twixt::Player::pegCanBePlaced(Board& board, const Position<>& pos) const
 {
 	Cell& curentCell = board[pos];
 	//check pos is not corner cell
@@ -169,12 +169,12 @@ bool twixt::Player::pegCanBePlaced(Board& board, const Position& pos) const
 	return true;
 }
 
-bool twixt::Player::checkLinkOverlapImproved(Board& board, const Position& posOne, const Position& posTwo) const
+bool twixt::Player::checkLinkOverlapImproved(Board& board, const Position<>& posOne, const Position<>& posTwo) const
 {
-	Position pos1 = posOne ,pos2 = posTwo ,pos3, pos4, pos5, pos6;
+	Position<> pos1 = posOne ,pos2 = posTwo ,pos3, pos4, pos5, pos6;
 	if (pos1.second > pos2.second)
 	{
-		Position aux = pos1;
+		Position<> aux = pos1;
 		pos1 = pos2;
 		pos2 = aux;
 	}
@@ -215,7 +215,7 @@ bool twixt::Player::checkLinkOverlapImproved(Board& board, const Position& posOn
 		pos6 = { pos1.first + 1, pos1.second + 1 };
 	}
 
-	auto checkOverlapForPosition = [&](const Position& pos) {
+	auto checkOverlapForPosition = [&](const Position<>& pos) {
 		if (board.isInBounds(pos) && board[pos].hasLinks()) {
 			for (Link* link : board[pos].getLinks()) {
 				auto [x1, y1] = posOne;
@@ -229,7 +229,7 @@ bool twixt::Player::checkLinkOverlapImproved(Board& board, const Position& posOn
 					(x2 == x4 && y2 == y4 && link->getP2().getColor() == m_color))
 					continue;
 				else {
-					auto orientation = [](const Position& p1, const Position& p2, const Position& p3) {
+					auto orientation = [](const Position<>& p1, const Position<>& p2, const Position<>& p3) {
 						int val = (p2.second - p1.second) * (p3.first - p2.first) -
 							(p2.first - p1.first) * (p3.second - p2.second);
 						if (val == 0) return 0;  // colinear 
@@ -255,10 +255,10 @@ bool twixt::Player::checkLinkOverlapImproved(Board& board, const Position& posOn
 
 bool twixt::Player::checkForWin(Board& board) const
 {
-	std::unordered_set<Position, PositionHash> visited;
+	std::unordered_set<Position<>, PositionHash<>> visited;
 
 	for (size_t i = 0; i < board.getSize(); i++) {
-		Position currentPos;
+		Position<> currentPos;
 		if(getColor() == Color::RED)
 			currentPos = { 0,i };
 		else
@@ -271,7 +271,7 @@ bool twixt::Player::checkForWin(Board& board) const
 			visited.insert(currentPos);
 			while (!bfsQueue.empty()) {
 				Peg currentPeg = bfsQueue.front();
-				Position currentPos = currentPeg.getPosition();
+				Position<> currentPos = currentPeg.getPosition();
 				bfsQueue.pop();
 				auto& [line, column] = currentPos;
 
@@ -281,7 +281,7 @@ bool twixt::Player::checkForWin(Board& board) const
 				std::unordered_set<Link*> links = board[currentPos].getLinks();
 				for (Link* link : links) {
 					Peg& nextPeg = link->getOtherEnd(board[currentPos].getPeg());
-					Position nextPos = nextPeg.getPosition();
+					Position<> nextPos = nextPeg.getPosition();
 					if (visited.find(nextPos) == visited.end()) {
 						bfsQueue.push(nextPeg);
 						visited.insert(nextPos);
@@ -305,12 +305,12 @@ void twixt::Player::initValidPegPositions( Board& board)
 	}
 }
 
-ActionSet& twixt::Player::getValidPegPositions()
+ActionSet<>& twixt::Player::getValidPegPositions()
 {
 	return m_validPegPositions;
 }
 
-void twixt::Player::eraseValidPegPosition(const Action& action)
+void twixt::Player::eraseValidPegPosition(const Action<>& action)
 {
 	m_validPegPositions.erase(action);
 }
@@ -329,7 +329,7 @@ Player& twixt::Player::operator=(const Player& other)
 	return *this;
 }
 
-void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const Position& pos2)
+void twixt::Player::placeLinkOnBoard(Board& board, const Position<>& pos1, const Position<>& pos2)
 {
 	Link* linkToAdd = new Link{ board[pos1].getPeg(), board[pos2].getPeg(), m_color };
 	board[pos1].addLink(linkToAdd);
@@ -339,15 +339,15 @@ void twixt::Player::placeLinkOnBoard(Board& board, const Position& pos1, const P
 
 void twixt::Player::removeLinkFromBoard(Board& board, Link* linkToRemove)
 {
-	Position pos1 = linkToRemove->getP1().getPosition();
-	Position pos2 = linkToRemove->getP2().getPosition();
+	Position<> pos1 = linkToRemove->getP1().getPosition();
+	Position<> pos2 = linkToRemove->getP2().getPosition();
 	board[pos1].removeLink(linkToRemove);
 	board[pos2].removeLink(linkToRemove);
 	delete linkToRemove;
 	this->m_numOfLinksLeft++;
 }
 
-void twixt::Player::placePegOnBoard(Board& board, const Position& pos)
+void twixt::Player::placePegOnBoard(Board& board, const Position<>& pos)
 {
 	if (m_placedPeg) // Player already placed a peg in this turn
 		return;

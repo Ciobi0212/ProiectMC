@@ -47,14 +47,14 @@ public:
     void setScreenCoordsForCells();
 
     // Event handling functions
-    void handleCellClick(const Position& pos, Player& currentPlayer, Board& board);
+    void handleCellClick(const Position<>& pos, Player& currentPlayer, Board& board);
     void handleLinkClick(Link* link, Player& currentPlayer, Board& board);
 
     // Message functions
     void winMessage(const Player& player);
 
     // Other functions
-    void setRecommendedActions(const std::vector<Action>& actions);
+    void setRecommendedActions(const std::vector<Action<>>& actions);
     void clearRecommendedActions();
     void loadSave(const std::string& saveGamePath);
     void resetGame();
@@ -64,5 +64,5 @@ private:
     TwixtGame& game;
     size_t boardSize;
     size_t cellSize;
-    std::vector<Action> recommendedActions;
+    std::vector<Action<>> recommendedActions;
 };
