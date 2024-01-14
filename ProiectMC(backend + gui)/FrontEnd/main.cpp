@@ -1,4 +1,4 @@
-#include "FrontEnd.h"
+#include "Menu.h"
 #include "PMT.h"
 #include <QtWidgets/QApplication>
 #include "MCTS.h"
@@ -6,10 +6,8 @@
 
 int main(int argc, char* argv[])
 {
-	std::string savePath = "SavedGames";
 	QApplication a(argc, argv);
-	TwixtGame game;
-	FrontEnd w(game);
+	Menu w;
 	w.show();
 	return a.exec();
 }

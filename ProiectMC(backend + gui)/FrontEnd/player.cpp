@@ -93,7 +93,7 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 	
 	if (board[pos1].getPeg().getColor() != m_color || board[pos2].getPeg().getColor() != m_color) {
 		return false;
-	} 
+	}
 	
 	for (auto link : board[pos1].getLinks()) {
 		if (link->getOtherEnd(board[pos1].getPeg()).getPosition() == pos2) {
@@ -117,18 +117,52 @@ bool twixt::Player::linkCanBePlaced(Board& board, const Position& pos1, const Po
 	return true;
 }
 
+bool twixt::Player::imaginaryLinkCanBePlaced(Board& board, const Position& pos1, const Position& pos2) const
+{
+	if (!(board.isInBounds(pos1) && board.isInBounds(pos2))) {
+		return false;
+	}
+	
+	if (!((board[pos1].hasPeg() && board[pos1].getPeg().getColor() == m_color) || (board[pos2].hasPeg() && board[pos2].getPeg().getColor() == m_color))) {
+		return false;
+	}
+
+	if (board[pos1].getPeg().getColor() != m_color && board[pos2].getPeg().getColor() != m_color) {
+		return false;
+	}
+	
+	if (checkLinkOverlapImproved(board, pos1, pos2)) {
+		return false;
+	}
+
+	return true;
+}
+
 bool twixt::Player::pegCanBePlaced(Board& board, const Position& pos) const
 {
 	Cell& curentCell = board[pos];
+	//check pos is not corner cell
+	if (pos.first == 0 && pos.second == 0) {
+		return false;
+	}
+	if (pos.first == 0 && pos.second == board.getSize() - 1) {
+		return false;
+	}
+	if (pos.first == board.getSize() - 1 && pos.second == 0) {
+		return false;
+	}
+	if (pos.first == board.getSize() - 1 && pos.second == board.getSize() - 1) {
+		return false;
+	}
 
 	if (curentCell.hasPeg()) {
 		return false;
 	}
 
-	if (m_baseType == BaseType::VERTICAL && (pos.first == 0 || pos.first == Board::BOARD_SIZE - 1)) {
+	if (m_baseType == BaseType::VERTICAL && (pos.first == 0 || pos.first == board.getSize() - 1)) {
 		return false;
 	}
-	if (m_baseType == BaseType::HORIZONTAL && (pos.second == 0 || pos.second == Board::BOARD_SIZE - 1)) {
+	if (m_baseType == BaseType::HORIZONTAL && (pos.second == 0 || pos.second == board.getSize() - 1)) {
 		return false;
 	}
 	
@@ -223,9 +257,9 @@ bool twixt::Player::checkForWin(Board& board) const
 {
 	std::unordered_set<Position, PositionHash> visited;
 
-	for (size_t i = 0; i < Board::BOARD_SIZE; i++) {
+	for (size_t i = 0; i < board.getSize(); i++) {
 		Position currentPos;
-		if(this->getColor() == Color::RED)
+		if(getColor() == Color::RED)
 			currentPos = { 0,i };
 		else
 		    currentPos = { i,0 };
@@ -241,10 +275,10 @@ bool twixt::Player::checkForWin(Board& board) const
 				bfsQueue.pop();
 				auto& [line, column] = currentPos;
 
-				if ((line == Board::BOARD_SIZE - 1 && m_color == Color::RED) || (column == Board::BOARD_SIZE - 1 && m_color == Color::BLUE))
+				if ((line == board.getSize() - 1 && m_color == Color::RED) || (column == board.getSize() - 1 && m_color == Color::BLUE))
 					return true;
 
-				std::unordered_set<Link*> links = std::move(board[currentPos].getLinks());
+				std::unordered_set<Link*> links = board[currentPos].getLinks();
 				for (Link* link : links) {
 					Peg& nextPeg = link->getOtherEnd(board[currentPos].getPeg());
 					Position nextPos = nextPeg.getPosition();
@@ -259,6 +293,28 @@ bool twixt::Player::checkForWin(Board& board) const
 	return false;
 }
 
+void twixt::Player::initValidPegPositions( Board& board)
+{
+	m_validPegPositions.clear();
+	
+	for (size_t i = 0; i < board.getSize(); i++) {
+		for (size_t j = 0; j < board.getSize(); j++) {
+			if (pegCanBePlaced(board, { i,j }))
+				m_validPegPositions.insert({ ActionType::PLACE_PEG,{ i, j },{i,j} });
+		}
+	}
+}
+
+ActionSet& twixt::Player::getValidPegPositions()
+{
+	return m_validPegPositions;
+}
+
+void twixt::Player::eraseValidPegPosition(const Action& action)
+{
+	m_validPegPositions.erase(action);
+}
+
 Player& twixt::Player::operator=(const Player& other)
 {
 	if (this != &other) {
@@ -268,6 +324,7 @@ Player& twixt::Player::operator=(const Player& other)
 		m_qcolor = other.m_qcolor;
 		m_numOfPegsLeft = other.m_numOfPegsLeft;
 		m_numOfLinksLeft = other.m_numOfLinksLeft;
+		m_validPegPositions = other.m_validPegPositions;
 	}
 	return *this;
 }
@@ -302,6 +359,7 @@ void twixt::Player::placePegOnBoard(Board& board, const Position& pos)
 	curentCell.setPeg(pegToAdd);
 	curentCell.setColor(m_color);
 	this->m_numOfPegsLeft--;
+	m_validPegPositions.erase({ ActionType::PLACE_PEG, pos,pos });
 	m_placedPeg = true;
 
 }

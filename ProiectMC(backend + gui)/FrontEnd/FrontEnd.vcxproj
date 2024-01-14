@@ -68,11 +68,17 @@
     <ClCompile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
+    <Link>
+      <Profile>true</Profile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
+    <Link>
+      <Profile>true</Profile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -103,6 +109,7 @@
     <ClCompile Include="GameStatsWidget.cpp" />
     <ClCompile Include="link.cpp" />
     <ClCompile Include="MCTS.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="PMT.cpp" />
     <ClCompile Include="peg.cpp" />
     <ClCompile Include="player.cpp" />
@@ -116,9 +123,11 @@
     <ClCompile Include="FrontEnd.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="GameStatsWidget.ui" />
+    <QtUic Include="Menu.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <QtMoc Include="Menu.h" />
     <ClInclude Include="Utils.h" />
     <QtMoc Include="BoardWidget.h" />
     <ClInclude Include="cell.h" />

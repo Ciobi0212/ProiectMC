@@ -52,15 +52,23 @@ void GameStatsWidget::drawPlayerStats(QPainter& painter, const Player& player, i
 
 void GameStatsWidget::on_pushButtonEndTurn_clicked()
 {
+    if (game.getCurrentPlayer().getPlacedPeg() == false) {
+		QMessageBox::information(this, "You silly ^_^", "You must place a peg before ending your turn!");
+        return;
+    }
     game.switchPlayer();
+    boardWidget.clearRecommendedActions();
     boardWidget.repaint();
     repaint();
 }
 
 void GameStatsWidget::on_pushButtonMCTS_clicked()
 {
-    MCTS mcts(game);
-    boardWidget.setRecommendedAction(mcts.best_action(10000));
+	boardWidget.clearRecommendedActions();
+    {
+        MCTS mcts(game);
+        boardWidget.setRecommendedActions(mcts.best_actions(game.getNumOfMCTSSimulations()));
+    }
     boardWidget.repaint();
 }
 
@@ -71,10 +79,7 @@ void GameStatsWidget::on_pushButtonSaveGame_clicked()
 
     saveFile << game.getBoard().getSize() << "\n";
     saveBoardState(saveFile);
-
-    saveFile << "CurrentPlayer " << ((game.getCurrentPlayer().getColor() == Color::RED) ? "RED" : "BLUE") << "\n";
-    saveFile << "CanPlacePeg " << !game.getCurrentPlayer().getPlacedPeg();
-
+	saveGameStats(saveFile);
     saveFile.close();
 }
 
@@ -111,6 +116,14 @@ void GameStatsWidget::savePegState(std::ofstream& saveFile, const Cell& cell) co
         std::string playerColor = (peg.getColor() == Color::RED) ? "RED" : "BLUE";
         saveFile << playerColor << " PEG " << cell.getPeg().getPosition().first << " " << cell.getPeg().getPosition().second << "\n";
     }
+}
+
+void GameStatsWidget::saveGameStats(std::ofstream& saveFile) const
+{
+    saveFile << "CurrentPlayer " << ((game.getCurrentPlayer().getColor() == Color::RED) ? "RED" : "BLUE") << "\n";
+    saveFile << "CanPlacePeg " << !game.getCurrentPlayer().getPlacedPeg() << "\n";
+	saveFile << "FirstPlayerNumOfPieces " << static_cast<int>(game.getFirstPlayer().getNumOfPegsLeft()) << " " << static_cast<int>(game.getFirstPlayer().getNumOfLinksLeft()) << "\n";
+	saveFile << "SecondPlayerNumOfPieces " << static_cast<int>(game.getSecondPlayer().getNumOfPegsLeft()) << " " << static_cast<int>(game.getSecondPlayer().getNumOfLinksLeft()) << "\n";
 }
 
 void GameStatsWidget::saveLinkState(std::ofstream& saveFile, const Cell& cell,

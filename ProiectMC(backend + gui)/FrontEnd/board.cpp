@@ -3,20 +3,20 @@
 
 namespace twixt {
 
-    Board::Board() {
-        m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
+    Board::Board(size_t boardSize) : BOARD_SIZE{ boardSize } {
+		m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
     }
-
+   
     Board::~Board() {
         for (size_t i = 0; i < BOARD_SIZE; i++) {
             for (size_t j = 0; j < BOARD_SIZE; j++) {
                 cleanCell(m_board[i][j]);
             }
         }
-        std::cout << "test";
     }
 
     Board::Board(const Board& board) {
+		BOARD_SIZE = board.getSize();
         m_board.resize(BOARD_SIZE, std::vector<Cell>(BOARD_SIZE));
 
         for (size_t i = 0; i < BOARD_SIZE; i++) {
@@ -24,6 +24,7 @@ namespace twixt {
                 if (board[{i, j}].hasPeg()) {
                     Peg* newPeg = new Peg(board[{i, j}].getPeg());
                     m_board[i][j].setPeg(newPeg);
+					m_board[i][j].setColor(newPeg->getColor());
                 }
             }
         }
@@ -38,6 +39,7 @@ namespace twixt {
                         Peg& peg2 = m_board[pos2.first][pos2.second].getPeg();
                         Link* newLink = new Link(peg1, peg2, peg1.getColor(), peg1.getQColor());
                         m_board[i][j].addLink(newLink);
+						m_board[i][j].setColor(peg1.getColor());
                     }
                 }
             }
@@ -80,9 +82,9 @@ namespace twixt {
 
     void Board::cleanCell(Cell& cell) {
         if (cell.hasLinks()) {
-            for (Link* link : cell.getLinks()) {
-                cleanLink(link);
-            }
+			for (Link* link : cell.getLinks()) {
+				cleanLink(link);
+			}
         }
 
         if (cell.hasPeg()) {

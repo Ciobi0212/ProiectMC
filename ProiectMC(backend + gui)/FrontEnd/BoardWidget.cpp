@@ -11,8 +11,6 @@ BoardWidget::BoardWidget(TwixtGame& game, QWidget* parent)
     cellSize = boardWidth / boardSize;
 
     setScreenCoordsForCells();
-
-    recommandedAction = { ActionType::NONE, {0,0}, {0,0} };
 }
 
 BoardWidget::~BoardWidget() = default;
@@ -32,7 +30,7 @@ void BoardWidget::drawBoard(QPainter& painter)
     }
 
     drawBaseDelimitators(painter);
-    drawRecommandation(painter);
+    drawRecommandations(painter);
 }
 
 void BoardWidget::drawBaseDelimitators(QPainter& painter)
@@ -137,6 +135,9 @@ void BoardWidget::handleCellClick(const Position& pos, Player& currentPlayer, Bo
     if (!currentCell.hasPeg()) { // Cell is empty
         if (currentPlayer.pegCanBePlaced(board, pos)) {
             currentPlayer.placePegOnBoard(board, pos);
+            game.getFirstPlayer().getValidPegPositions().erase({ ActionType::PLACE_PEG,pos,pos });
+            game.getSecondPlayer().getValidPegPositions().erase({ ActionType::PLACE_PEG,pos,pos });
+			clearRecommendedActions();
             repaint();
         }
     }
@@ -177,17 +178,37 @@ void BoardWidget::paintEvent(QPaintEvent* event)
     drawBoard(painter);
 }
 
-void BoardWidget::drawRecommandation(QPainter& painter)
+void BoardWidget::drawRecommandations(QPainter& painter)
 {
-    if (std::get<0>(recommandedAction) != ActionType::NONE) {
-        auto& board = game.getBoard();
-        auto& firstCell = board[std::get<1>(recommandedAction)];
+	if (recommendedActions.empty()) {
+		return;
+	}
+    painter.setPen(QPen(Qt::darkMagenta, 3, Qt::SolidLine, Qt::RoundCap));
+
+	
+	uint8_t howManyRecommandations = recommendedActions.size() >= 3 ? 3 : recommendedActions.size();
+    
+	std::for_each(recommendedActions.end() - howManyRecommandations, recommendedActions.end(), [&](const auto& recommandedAction) {
+       const auto& board = game.getBoard();
+       const auto& firstCell = board[std::get<1>(recommandedAction)];
+	   ActionSet possibileLinkActions = game.getValidImaginaryLinkActions(std::get<1>(recommandedAction));
+       
+	  
         size_t centerX = firstCell.getPositionOnScreen().x();
         size_t centerY = firstCell.getPositionOnScreen().y();
-        painter.setBrush(QBrush(Qt::cyan, Qt::SolidPattern));
         painter.drawEllipse(centerX, centerY, radius * 2, radius * 2);
-    }
-    recommandedAction = { ActionType::NONE, {0,0}, {0,0} };
+
+		
+		std::for_each(possibileLinkActions.begin(), possibileLinkActions.end(), [&](const auto& linkAction) {
+			const auto& firstCell = board[std::get<1>(linkAction)];
+			const auto& secondCell = board[std::get<2>(linkAction)];
+			size_t xStart = firstCell.getPositionOnScreen().x() + radius;
+			size_t yStart = firstCell.getPositionOnScreen().y() + radius;
+			size_t xEnd = secondCell.getPositionOnScreen().x() + radius;
+			size_t yEnd = secondCell.getPositionOnScreen().y() + radius;
+			painter.drawLine(xStart, yStart, xEnd, yEnd);
+			});
+		});
 }
 
 void BoardWidget::mousePressEvent(QMouseEvent* event)
@@ -211,8 +232,7 @@ void BoardWidget::mousePressEvent(QMouseEvent* event)
     for (size_t row = 0; row < board.getSize(); row++) {
         for (size_t col = 0; col < board.getSize(); col++) {
             auto& currentCell = board[{row, col}];
-            // Check if click was on a link
-            for (auto link : currentCell.getLinks()) {
+            for (auto& link : currentCell.getLinks()) {
                 if (isClickOnLink(mousePos, link)) {
                     handleLinkClick(link, currentPlayer, board);
                     return;
@@ -229,13 +249,22 @@ void BoardWidget::winMessage(const Player& player)
     msgBox.exec();
 }
 
-void BoardWidget::setRecommendedAction(Action action)
+void BoardWidget::setRecommendedActions(const std::vector<Action>& actions)
 {
-    recommandedAction = action;
+    recommendedActions = actions;
+}
+
+void BoardWidget::clearRecommendedActions()
+{
+	recommendedActions.clear();
 }
 
 void BoardWidget::loadSave(const std::string& savedGamePath)
 {
+    if (savedGamePath.empty()) {
+        return;
+    }
+
     std::ifstream savedGame(savedGamePath);
     if (!savedGame.is_open()) {
         throw std::runtime_error("Could not open file");
@@ -244,9 +273,7 @@ void BoardWidget::loadSave(const std::string& savedGamePath)
     std::string line;
     savedGame >> line;
     if (std::stoul(line) != game.getBoard().getSize()) {
-        QMessageBox msgBox;
-        msgBox.setText("The save file does not match the current board size");
-        msgBox.exec();
+        QMessageBox::information(this, "Incompatible Board Size", "The current board size doesn't match the save file, try another save file.");
         return;
     }
 
@@ -271,6 +298,8 @@ void BoardWidget::loadSave(const std::string& savedGamePath)
             if (tokens[1] == "PEG") {
                 Position pos = { std::stoul(tokens[2]), std::stoul(tokens[3]) };
                 game.getCurrentPlayer().placePegOnBoard(game.getBoard(), pos);
+                game.getCurrentPlayer().setNumOfPegsLeft(100);
+                game.getCurrentPlayer().setNumOfLinksLeft(100);
                 game.getCurrentPlayer().setPlacedPeg(false);
             }
             else if (tokens[1] == "LINK") {
@@ -285,8 +314,19 @@ void BoardWidget::loadSave(const std::string& savedGamePath)
             if (tokens[0] == "CanPlacePeg") {
                 game.getCurrentPlayer().setPlacedPeg(tokens[1] == "0");
             }
+            if (tokens[0] == "FirstPlayerNumOfPieces") {
+                game.getFirstPlayer().setNumOfPegsLeft(std::stoul(tokens[1]));
+                game.getFirstPlayer().setNumOfLinksLeft(std::stoul(tokens[2]));
+            }
+            if (tokens[0] == "SecondPlayerNumOfPieces") {
+                game.getSecondPlayer().setNumOfPegsLeft(std::stoul(tokens[1]));
+                game.getSecondPlayer().setNumOfLinksLeft(std::stoul(tokens[2]));
+            }
         }
     }
+
+    game.getFirstPlayer().initValidPegPositions(game.getBoard());
+    game.getSecondPlayer().initValidPegPositions(game.getBoard());
 }
 
 void BoardWidget::resetGame()

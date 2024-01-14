@@ -1,32 +1,36 @@
 #pragma once
 
-#include <iostream>;
-#include <vector>;
-#include "cell.h"
+#include <iostream> 
+#include <vector>
+
+#include "Cell.h" 
 
 namespace twixt {
-	 class Board {
-	public:
-		Board();
-		~Board();
-		Board(const Board& board);
 
-		size_t getSize() const;
+    class Board {
+    public:
+        // Constructors and destructor
+        Board(size_t boardSize = 12);
+        ~Board();
+        Board(const Board& board);
 
-	    bool isInBounds(const Position& pos) const;
-		void cleanLink(Link* link);
-		void cleanCell(Cell& cell);
-		void cleanPeg(Peg& peg);
-		void resetBoard();
+        // Getter for board size
+        size_t getSize() const;
 
-		Cell& operator[](const Position& pos);
-		const Cell& operator[](const Position& pos) const;
-		
+        // Utility functions
+        bool isInBounds(const Position& pos) const;
+        void cleanLink(Link* link);
+        void cleanCell(Cell& cell);
+        void cleanPeg(Peg& peg);
+        void resetBoard();
 
-	public:
-		static constexpr size_t BOARD_SIZE{ 12 };
-		
-	 private:
-		std::vector<std::vector<Cell>> m_board;
-	};
+        // Operator overloads
+        Cell& operator[](const Position& pos);
+        const Cell& operator[](const Position& pos) const;
+
+    private:
+        // Member variables
+        std::vector<std::vector<Cell>> m_board;
+        size_t BOARD_SIZE;
+    };
 }

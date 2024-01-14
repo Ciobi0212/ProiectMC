@@ -1,24 +1,28 @@
-Move 0 5
-Wins: -3
-Visits: 20
-Win rate: -0.15
-Move 3 3
-Wins: -2
-Visits: 26
-Win rate: -0.0769231
-Move 1 3
-Wins: -1.5
-Visits: 27
-Win rate: -0.0555556
-Move 3 5
-Wins: 2
-Visits: 35
-Win rate: 0.0571429
-Move 0 1
-Wins: 3
-Visits: 38
-Win rate: 0.0789474
+Move 7 2
+Wins: -4
+Visits: 16
+Win rate: -0.25
 Move 4 3
-Wins: 6
-Visits: 42
-Win rate: 0.142857
+Wins: -3
+Visits: 19
+Win rate: -0.157895
+Move 7 3
+Wins: -2.5
+Visits: 19
+Win rate: -0.131579
+Move 5 6
+Wins: -1
+Visits: 24
+Win rate: -0.0416667
+Move 2 6
+Wins: 3
+Visits: 35
+Win rate: 0.0857143
+Move 3 5
+Wins: 5
+Visits: 40
+Win rate: 0.125
+Move 4 4
+Wins: 16.5
+Visits: 63
+Win rate: 0.261905

@@ -1,42 +1,51 @@
 #pragma once
-#include "board.h";
-#include "player.h";
+
+#include "Board.h"
+#include "Player.h"
 #include <fstream>
 #include <regex>
 
-using namespace twixt;
+namespace twixt {
 
-class TwixtGame
-{
-public:
-	TwixtGame();
-	~TwixtGame();
-	TwixtGame(TwixtGame& other);
-	Board& getBoard();
-	void switchPlayer();
-	Player& getCurrentPlayer();
-	Player& getFirstPlayer();
-	Player& getSecondPlayer();
-	void setCurrentPlayer(Color color);
-	
+    class TwixtGame {
+    public:
+        // Constructors and destructor
+        TwixtGame(size_t boardSize = 12, uint8_t numOfPieces = 50, uint32_t numOfMCTSSimulations = 10000);
+        ~TwixtGame();
+        TwixtGame(TwixtGame& other);
 
-	//Helper Functions for AI
-	ActionSet getValidActions();
-	ActionSet getValidPegActions();
-	ActionSet getValidLinkActions();
-	ActionSet getValidLinkActionsImproved(Position positionOfLastPegPlaced);
-	
-	bool isGameOver();
-	bool isDraw();
-	
-	void goToNextState(Action& action);
-	
-	
-	
-private:
-	Board board;
-	Player firstPlayer;
-	Player secondPlayer;
-	Color currentPlayer;
-};
+        // Getter functions
+        Board& getBoard();
+        uint32_t getNumOfMCTSSimulations();
+        Player& getCurrentPlayer();
+        Player& getFirstPlayer();
+        Player& getSecondPlayer();
 
+        // Setter functions
+        void setCurrentPlayer(Color color);
+
+        // Game state manipulation functions
+        void switchPlayer();
+        void goToNextState(const Action& action);
+
+        // Helper functions for AI
+        ActionSet getValidActions();
+        ActionSet getValidPegActions();
+        ActionSet getValidLinkActions();
+        ActionSet getValidLinkActionsImproved(Position positionOfLastPegPlaced);
+        ActionSet getValidImaginaryLinkActions(Position positionOfImaginaryPeg);
+
+        // Game status functions
+        bool isGameOver();
+        bool isDraw();
+        bool currentPlayerWon();
+
+    private:
+        // Member variables
+        Board board;
+        Player firstPlayer;
+        Player secondPlayer;
+        Color currentPlayer;
+        uint32_t numOfMCTSSimulations;
+    };
+}
