@@ -1,8 +1,5 @@
 #include "Menu.h"
-#include "PMT.h"
 #include <QtWidgets/QApplication>
-#include "MCTS.h"
-#include <fstream>
 
 int main(int argc, char* argv[])
 {

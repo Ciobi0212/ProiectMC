@@ -183,12 +183,18 @@ void BoardWidget::drawRecommandations(QPainter& painter)
 	if (recommendedActions.empty()) {
 		return;
 	}
-    painter.setPen(QPen(Qt::darkMagenta, 3, Qt::SolidLine, Qt::RoundCap));
+    
+    
+	//make an array of 3 colors for the 3 recommandations
+    std::array<QColor, 3> colors = { Qt::green, Qt::magenta, Qt::cyan };
+	uint8_t colorIndex = 0;
 
 	
 	uint8_t howManyRecommandations = recommendedActions.size() >= 3 ? 3 : recommendedActions.size();
     
 	std::for_each(recommendedActions.end() - howManyRecommandations, recommendedActions.end(), [&](const auto& recommandedAction) {
+        painter.setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap));
+       painter.setBrush(QBrush(colors[colorIndex], Qt::SolidPattern));
        const auto& board = game.getBoard();
        const auto& firstCell = board[std::get<1>(recommandedAction)];
 	   ActionSet possibileLinkActions = game.getValidImaginaryLinkActions(std::get<1>(recommandedAction));
@@ -198,7 +204,7 @@ void BoardWidget::drawRecommandations(QPainter& painter)
         size_t centerY = firstCell.getPositionOnScreen().y();
         painter.drawEllipse(centerX, centerY, radius * 2, radius * 2);
 
-		
+        painter.setPen(QPen(colors[colorIndex++], 3, Qt::SolidLine, Qt::RoundCap));
 		std::for_each(possibileLinkActions.begin(), possibileLinkActions.end(), [&](const auto& linkAction) {
 			const auto& firstCell = board[std::get<1>(linkAction)];
 			const auto& secondCell = board[std::get<2>(linkAction)];

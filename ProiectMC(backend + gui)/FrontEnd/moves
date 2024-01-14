@@ -1,16 +1,8 @@
-Move 9 3
-Wins: 0
-Visits: 44
-Win rate: 0
-Move 7 5
-Wins: 756.5
-Visits: 1404
-Win rate: 0.538818
-Move 8 8
-Wins: 1601.5
-Visits: 2802
-Win rate: 0.571556
-Move 8 6
-Wins: 1966
-Visits: 3395
-Win rate: 0.579087
+Move 5 2
+Wins: 0.5
+Visits: 14
+Win rate: 0.0357143
+Move 5 0
+Wins: 543
+Visits: 602
+Win rate: 0.901993

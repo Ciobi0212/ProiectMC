@@ -110,7 +110,6 @@
     <ClCompile Include="link.cpp" />
     <ClCompile Include="MCTS.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="PMT.cpp" />
     <ClCompile Include="peg.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="TwixtGame.cpp" />
@@ -135,7 +134,6 @@
     <QtMoc Include="GameStatsWidget.h" />
     <ClInclude Include="link.h" />
     <ClInclude Include="MCTS.h" />
-    <ClInclude Include="PMT.h" />
     <ClInclude Include="peg.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="TwixtGame.h" />
