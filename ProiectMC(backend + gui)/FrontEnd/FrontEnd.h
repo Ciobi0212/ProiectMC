@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <fstream>
 #include "ui_FrontEnd.h"
 #include "TwixtGame.h"
 #include "BoardWidget.h"
@@ -19,8 +20,6 @@ class FrontEnd : public QMainWindow
 public:
 	FrontEnd(TwixtGame& game, QWidget* parent = nullptr);
 	~FrontEnd();
-
-	
 
 private:
 	Ui::FrontEndClass ui;

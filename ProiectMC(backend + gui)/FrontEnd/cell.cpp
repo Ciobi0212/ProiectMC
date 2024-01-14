@@ -1,82 +1,66 @@
-#include "cell.h";
-using namespace twixt;
+#include "cell.h"
 
+namespace twixt {
 
-Cell::Cell() {
-	m_peg = nullptr;
-	m_links = std::unordered_set<Link*>();
-	m_color = Color::NONE;
-}
+    Cell::Cell()
+        : m_peg{ nullptr }, m_color{ Color::NONE }, m_links{}
+    {
+		//empty constructor
+    }
 
-Cell::~Cell() = default;
+    Cell::~Cell() {
+        m_peg = nullptr;
+    }
 
-Color Cell::getColor() const {
-	return m_color;
-}
+    Color Cell::getColor() const {
+        return m_color;
+    }
 
-Peg& Cell::getPeg() const {
-	if (m_peg)
-		return *m_peg;
-	else
-		throw std::exception("Cell has no peg");
-}
+    Peg& Cell::getPeg() const {
+        if (m_peg)
+            return *m_peg;
+        else
+            throw std::exception("Cell has no peg");
+    }
 
-std::unordered_set<Link*> twixt::Cell::getLinks() const
-{
-	return m_links;
-}
+    std::unordered_set<Link*> Cell::getLinks() const {
+        return m_links;
+    }
 
-void Cell::setColor(Color color) {
-	m_color = color;
-}
+    void Cell::setColor(Color color) {
+        m_color = color;
+    }
 
-void twixt::Cell::setPositionOnScreen(QPoint position)
-{
-	m_positionOnScreen = position;
-}
+    void Cell::setPositionOnScreen(QPoint position) {
+        m_positionOnScreen = position;
+    }
 
-QPoint twixt::Cell::getPositionOnScreen() const
-{
-	return m_positionOnScreen;
-}
+    QPoint Cell::getPositionOnScreen() const {
+        return m_positionOnScreen;
+    }
 
-void Cell::setPeg(Peg* peg) {
-	m_peg = peg;
-}
+    void Cell::setPeg(Peg* peg) {
+        m_peg = peg;
+    }
 
-void twixt::Cell::addLink(Link* link)
-{
-	m_links.insert(link);
-}
+    void Cell::addLink(Link* link) {
+        m_links.insert(link);
+    }
 
-void twixt::Cell::removeLink(Link* link)
-{
-	m_links.erase(link);
-}
+    void Cell::removeLink(Link* link) {
+        m_links.erase(link);
+    }
 
-bool Cell::hasColor() const {
-	if (m_color == Color::NONE) {
-		return false;
-	}
-	
-	return true;
-}
+    bool Cell::hasColor() const {
+        return m_color != Color::NONE;
+    }
 
-bool Cell::hasPeg() const {
-	if (m_peg == nullptr) {
-		return false;
-	}
+    bool Cell::hasPeg() const {
+        return m_peg != nullptr;
+    }
 
-	return true;
-}
+    bool Cell::hasLinks() const {
+        return !m_links.empty();
+    }
 
-bool twixt::Cell::hasLinks() const
-{
-	if (m_links.size() == 0){
-		return false;
-	}
-
-	return true;
-}
-
-
+}  

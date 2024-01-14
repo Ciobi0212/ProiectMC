@@ -70,6 +70,9 @@
     <ClCompile Include="MCTS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h">
@@ -96,6 +99,9 @@
     <ClInclude Include="MCTS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="BoardWidget.h">
@@ -104,12 +110,18 @@
     <QtMoc Include="GameStatsWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Menu.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="BoardWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GameStatsWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Menu.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

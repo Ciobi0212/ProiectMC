@@ -1,0 +1,5 @@
+12
+CurrentPlayer RED
+CanPlacePeg 1
+FirstPlayerNumOfPieces 25 25
+SecondPlayerNumOfPieces 25 25
