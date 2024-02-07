@@ -11,18 +11,15 @@ Besides the basic game it also includes:
 - load game functionality
 
 - the board size, number of pieces and the number of simulations the AI does to provide the recommendations are configurable.
-<p>
-Menu: 
+
+Screenshots:
+
 <img src = "twixt-project/Screenshots/Menu.png" alt = "menu ss" title = "Menu" width = "350" height = "350">
 
-</p>
 
-<p>
-Game window: 
+
 <img src = "twixt-project/Screenshots/GameWindow.png" alt = "game window ss" title = "Game Window" width = "350" height = "350">
-</p>
 
-<p>
-Example of recommendation:
+
+
 <img src = "twixt-project/Screenshots/Rec.png" alt = "rec ss" title = "Recommendation" width = "350" height = "350">
-</p>
