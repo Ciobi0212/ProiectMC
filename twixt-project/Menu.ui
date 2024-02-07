@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MenuClass</class>
+ <widget class="QWidget" name="MenuClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>650</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>650</width>
+    <height>650</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Menu</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>120</y>
+     <width>301</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="menuLayout">
+    <item>
+     <widget class="QGroupBox" name="GameOptionsGroupBox">
+      <property name="font">
+       <font>
+        <family>Agency FB</family>
+        <pointsize>21</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="title">
+       <string>Game Options</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="boardSizeLayout">
+         <item>
+          <widget class="QLabel" name="labelBoardSize">
+           <property name="maximumSize">
+            <size>
+             <width>110</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Agency FB</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string> Board Size:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="boardSizeComboBox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="frame">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>8 </string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>10</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>12 </string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>16 </string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>24 </string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="NumbOfPiecesLayout">
+         <item>
+          <widget class="QLabel" name="labelBoardSize_2">
+           <property name="maximumSize">
+            <size>
+             <width>110</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Agency FB</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Number of Pieces:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="numbOfPieceComboBox">
+           <item>
+            <property name="text">
+             <string>10</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>25</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>50</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="MTCSLayout">
+         <item>
+          <widget class="QLabel" name="labelBoardSize_3">
+           <property name="maximumSize">
+            <size>
+             <width>110</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Agency FB</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>MCTS Simulations:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="MCTSComboBox">
+           <item>
+            <property name="text">
+             <string>1000</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>10000</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>25000</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>50000</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>75000</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>100000</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QPushButton" name="pushButtonPlay">
+      <property name="minimumSize">
+       <size>
+        <width>191</width>
+        <height>71</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>191</width>
+        <height>71</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Agency FB</family>
+        <pointsize>36</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>PLAY</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+   <zorder>pushButtonPlay</zorder>
+   <zorder>GameOptionsGroupBox</zorder>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>-10</x>
+     <y>-70</y>
+     <width>731</width>
+     <height>761</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="FrontEnd.qrc">:/FrontEnd/background.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>430</y>
+     <width>671</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="FrontEnd.qrc">:/trees/redTree.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>-160</x>
+     <y>-120</y>
+     <width>671</width>
+     <height>461</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="FrontEnd.qrc">:/trees/blueTree.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>630</y>
+     <width>671</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="FrontEnd.qrc">:/trees/redTree.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>200</y>
+     <width>221</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>48</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>TWIXT</string>
+   </property>
+  </widget>
+  <zorder>label</zorder>
+  <zorder>verticalLayoutWidget_2</zorder>
+  <zorder>label_3</zorder>
+  <zorder>label_4</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_5</zorder>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="FrontEnd.qrc"/>
+ </resources>
+ <connections/>
+</ui>

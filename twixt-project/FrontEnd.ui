@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FrontEndClass</class>
+ <widget class="QMainWindow" name="FrontEndClass">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>845</width>
+    <height>414</height>
+   </rect>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
+  </property>
+  <property name="windowTitle">
+   <string>FrontEnd</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">border-color: rgb(0, 0, 0);</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="FrontEnd.qrc"/>
+ </resources>
+ <connections/>
+</ui>
