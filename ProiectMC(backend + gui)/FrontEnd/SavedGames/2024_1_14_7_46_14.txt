@@ -1,7 +1,0 @@
-8
-RED PEG 4 3
-BLUE PEG 6 4
-CurrentPlayer RED
-CanPlacePeg 1
-FirstPlayerNumOfPieces 9 10
-SecondPlayerNumOfPieces 9 10
