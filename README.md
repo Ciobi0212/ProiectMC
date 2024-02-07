@@ -14,10 +14,10 @@ Besides the basic game it also includes:
 
 Menu: 
 
-<img src = "twixt-project/Screenshots/Menu.png" alt = "menu ss" title = "Menu">
+<img src = "twixt-project/Screenshots/Menu.png" alt = "menu ss" title = "Menu" width = "350" height = "350">
 
 Game window: 
-<img src = "twixt-project/Screenshots/GameWindow.png" alt = "game window ss" title = "Game Window">
+<img src = "twixt-project/Screenshots/GameWindow.png" alt = "game window ss" title = "Game Window" width = "350" height = "350">
 
 Example of recommendation:
-<img src = "twixt-project/Screenshots/Rec.png" alt = "rec ss" title = "Recommendation">
+<img src = "twixt-project/Screenshots/Rec.png" alt = "rec ss" title = "Recommendation" width = "350" height = "350">
