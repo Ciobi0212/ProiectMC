@@ -1,4 +1,4 @@
-# MCiobi
+# twixt-project
 
 The project is an implementation of the board game "Twixt" using C++ and the Qt framework.
 
