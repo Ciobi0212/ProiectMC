@@ -64,9 +64,6 @@
     <ClCompile Include="GameStatsWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PMT.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MCTS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -74,9 +71,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -97,9 +91,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TwixtGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PMT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MCTS.h">
