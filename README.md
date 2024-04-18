@@ -18,12 +18,16 @@ This project is an implementation of the classic board game "Twixt" using C++ an
 - **Qt Framework**: Used for GUI and application logic.
 Screenshots:
 
+**Menu**:
+  
 <img src = "twixt-project/Screenshots/Menu.png" alt = "menu ss" title = "Menu" width = "350" height = "350">
 
 
+**Game example**:
 
 <img src = "twixt-project/Screenshots/GameWindow.png" alt = "game window ss" title = "Game Window" width = "350" height = "350">
 
 
+**Recomandation example**: 
 
 <img src = "twixt-project/Screenshots/Rec.png" alt = "rec ss" title = "Recommendation" width = "350" height = "350">
