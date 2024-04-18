@@ -1,17 +1,21 @@
-# twixt-project
+# Twixt wth a twist
 
-The project is an implementation of the board game "Twixt" using C++ and the Qt framework.
+## Overview
 
-Besides the basic game it also includes:
+This project is an implementation of the classic board game "Twixt" using C++ and the Qt framework. "Twixt" is a strategy board game that involves connecting pegs on a grid with links to form a continuous path. Our version enhances the standard gameplay with a powerful AI recommendation system, as well as customizable game settings.
 
-- a recommendation system that can help each player make the best move at a given moment. At the request of the player the AI uses Monte Carlo Tree Search to determine the most advantageous move the player can make to win.
+## Features
 
-- save game functionality
+- **Basic Gameplay**: Enjoy the classic strategy of Twixt against another local player.
+- **AI Recommendation System**: Utilizes Monte Carlo Tree Search to suggest the most advantageous moves, helping players strategize effectively.
+- **Save Game Functionality**: Players can save their game state and resume at their convenience.
+- **Load Game Functionality**: Load previously saved games to continue play without losing progress.
+- **Customizable Settings**: Players can adjust the board size, number of pieces, and the number of simulations the AI performs for generating move recommendations.
 
-- load game functionality
+## Technologies Used
 
-- the board size, number of pieces and the number of simulations the AI does to provide the recommendations are configurable.
-
+- **C++**: Core programming language.
+- **Qt Framework**: Used for GUI and application logic.
 Screenshots:
 
 <img src = "twixt-project/Screenshots/Menu.png" alt = "menu ss" title = "Menu" width = "350" height = "350">
